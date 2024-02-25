@@ -1,4 +1,6 @@
+import 'react-native-gesture-handler';
 import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,20 +8,15 @@ import {
   Text
 } from 'react-native';
 import codePush from 'react-native-code-push';
+import CDrawer from './src/components/CDrawer';
 
 function App() {
-    const backgroundStyle = {
-      backgroundColor: 'red',
-    };
-  
-    return ( 
-        <View style={{ flex: 1, flexDirection: 'row' }}>
-            <View style={{ flex: 1, backgroundColor: 'yellow' }}></View>
-            <View style={{ flex: 2, backgroundColor: 'blue' }}></View>
-            <View style={{ flex: 1, backgroundColor: 'green' }}></View>
-        </View>    
-
-)}
+    return (
+      <NavigationContainer>
+        <CDrawer />
+      </NavigationContainer>
+    );
+}
 
 const styles = StyleSheet.create({
     container: {

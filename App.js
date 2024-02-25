@@ -8,12 +8,12 @@ import {
   Text
 } from 'react-native';
 import codePush from 'react-native-code-push';
-import CDrawer from './src/components/CDrawer';
+import DrawerNav from './src/components/DrawerNav';
 
 function App() {
     return (
       <NavigationContainer>
-        <CDrawer />
+        <DrawerNav />
       </NavigationContainer>
     );
 }

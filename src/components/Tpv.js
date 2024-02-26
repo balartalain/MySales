@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { View, Button, Text } from 'react-native';
+import { View, Button, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
+import Display from './Display';
 
-export default function Sales({ navigation }) {
+export default function Tpv({ navigation }) {
   React.useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
@@ -16,12 +17,21 @@ export default function Sales({ navigation }) {
     });
   }, [navigation]);
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Home screen</Text>
-        <Button
-          title="Go to Details"
-          onPress={() => navigation.navigate('Details')}
-        />
+      <View style={{ flex: 1 }}>
+        <Display/>
+        <View style={{flex:6, backgroundColor: 'blue'}}>
+          <Button
+            title="Go to Details"
+            onPress={() => navigation.navigate('Details')}
+          />
+        </View>
       </View>
+
     );
   }
+  const styles = StyleSheet.create({
+    container: {
+        flex:1,
+        backgroundColor: 'red'
+      },
+  });

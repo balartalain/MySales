@@ -3,6 +3,7 @@ import { Button } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import Tpv from './Tpv';
 import Details from './Details';
+import { View } from 'react-native-reanimated/lib/typescript/Animated';
 
 const Stack = createStackNavigator();
 const salesHeaderStyles = {
@@ -12,10 +13,11 @@ const salesHeaderStyles = {
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
-      fontWeight: 'bold',
+      fontWeight: 'bold'      
     },
-     headerTitle: (props) => <Button {...props} title='Ticket'/>,
-     headerLeft: ()=>{
+    headerTitleAlign: 'center',
+    headerTitle: (props) => <Button {...props} title='Ticket'/>,
+    headerLeft: ()=>{
         return <Icon />
      }
   }

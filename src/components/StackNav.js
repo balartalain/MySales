@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { Button } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-import Sales from './Sales';
+import Tpv from './Tpv';
 import Details from './Details';
 
 const Stack = createStackNavigator();
@@ -22,7 +22,7 @@ const salesHeaderStyles = {
 function StackNav() {
     return (
       <Stack.Navigator>
-        <Stack.Screen name="Sales" component={Sales} 
+        <Stack.Screen name="Tpv" component={Tpv} 
             options={salesHeaderStyles}
         />
         { /*<Stack.Screen name="Notifications" component={Notifications} /> */}

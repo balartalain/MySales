@@ -15,9 +15,7 @@ export default function Display() {
           </View>
           <View style={{flex:1, alignItems: 'center'}}>    
             <TouchableOpacity style={styles.button} onPress={onPress}>
-                <View>
-                    <Text style={{color:'#000',fontSize: 30}}>0</Text>
-                </View>
+                <Text style={{color:'#000',fontSize: 30}}>0</Text>
                 <Icon name='shopping-cart' size={40}/>                        
             </TouchableOpacity>        
           </View>
@@ -25,16 +23,11 @@ export default function Display() {
     );
   }
   const styles = StyleSheet.create({
-    container: {
-        flex:1,
-        backgroundColor: 'red'
-      },
-      button: {     
+    button: {     
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
         height: '100%',
         elevation: 3,
-        backgroundColor: 'gray',
-      },
+    },
   });

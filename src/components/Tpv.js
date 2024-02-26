@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, Button, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import Display from './Display';
+import Search from './Search';
 
 export default function Tpv({ navigation }) {
   React.useEffect(() => {
@@ -20,10 +21,7 @@ export default function Tpv({ navigation }) {
       <View style={{ flex: 1 }}>
         <Display/>
         <View style={{flex:6, backgroundColor: 'blue'}}>
-          <Button
-            title="Go to Details"
-            onPress={() => navigation.navigate('Details')}
-          />
+         <Search/>
         </View>
       </View>
 

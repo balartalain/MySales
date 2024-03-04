@@ -20,7 +20,7 @@ export default function Tpv({ navigation }) {
     return (
       <View style={{ flex: 1 }}>
         <Display/>
-        <View style={{flex:6, backgroundColor: 'blue'}}>
+        <View style={{flex:6}}>
          <Search/>
         </View>
       </View>

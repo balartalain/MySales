@@ -3,13 +3,14 @@ import { Button } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import Tpv from './Tpv';
 import Details from './Details';
-import { View } from 'react-native-reanimated/lib/typescript/Animated';
+import useTheme from '../useTheme';
+import useThemedStyles from '../useThemeStyles';
 
 const Stack = createStackNavigator();
-const salesHeaderStyles = {
+const salesHeaderStyles = (theme) => ({
     //title: 'My home',
     headerStyle: {
-      backgroundColor: '#f4511e',
+      backgroundColor: theme.primaryColor,
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
@@ -20,12 +21,13 @@ const salesHeaderStyles = {
     headerLeft: ()=>{
         return <Icon />
      }
-  }
+  })
 function StackNav() {
+  const salesThemedHeaderStyles = useThemedStyles(salesHeaderStyles); 
     return (
       <Stack.Navigator>
         <Stack.Screen name="Tpv" component={Tpv} 
-            options={salesHeaderStyles}
+            options={salesThemedHeaderStyles}
         />
         { /*<Stack.Screen name="Notifications" component={Notifications} /> */}
         <Stack.Screen name="Details" component={Details} />

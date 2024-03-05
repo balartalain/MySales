@@ -4,31 +4,31 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import useTheme from '../useTheme';
 import Search from './Search';
 import ProductCard from './ProductCard';
-const data = [
+let origData = [
     {
         id: 1,
         picture: 'https://picsum.photos/200',
-        name: 'Product 1',
+        name: 'Cerveza',
         price: 20
     },{
         id: 2,
         picture: 'https://picsum.photos/200',
-        name: 'Product 2',
+        name: 'Pure de tomate',
         price: 8
     },{
         id: 3,
         picture: 'https://picsum.photos/200',
-        name: 'Product 3',
+        name: 'Refreso de Cola',
         price: 10
     },{
         id: 4,
         picture: 'https://picsum.photos/200',
-        name: 'Product 1',
+        name: 'Jugos naturales',
         price: 20
     },{
         id: 5,
         picture: 'https://picsum.photos/200',
-        name: 'Product 2',
+        name: 'Product Vino tinto',
         price: 8
     },{
         id: 6,
@@ -53,10 +53,18 @@ const data = [
     }
 ]
 export default function ProductList({onSelectItem}) {
+    console.log('ProductList');
     const theme = useTheme();
+    const [searchValue, changeSearchValue] = React.useState('ABC');
+    const [data, setData] = React.useState(origData);
+    const onSearchText = React.useCallback((text) =>{        
+        const filterData = origData.filter(item=>item.name.includes(text) || text === '' )
+        //console.log(text);
+        setData(filterData);
+    }, [])
     return (
-        <View >            
-            <Search />
+        <View >      
+            <Search onChangeText={onSearchText} />
             <FlatList
                 itemHeight={60}
                 data={data}

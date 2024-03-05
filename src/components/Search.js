@@ -3,24 +3,29 @@ import { View, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-nativ
 import Icon from 'react-native-vector-icons/AntDesign';
 import useTheme from '../useTheme';
 
-export default function Search({customStyles={}, onChangeText=()=>{}}) {
+function Search({customStyles={}, onChangeText=()=>{}}) {
+    console.log('Search');
+    const inputRef = React.useRef(null);
     const theme = useTheme();
-    const onPress = ()=>{
-        console.log('3434');
+    const clearTex = ()=>{
+        inputRef.current.setNativeProps({text:''});
+        onChangeText('');
     }
+    
     return (
         <View style={{...styles.container,  ...customStyles}}>
-            <TextInput
+            <TextInput ref={inputRef}
                 placeholder="Buscar artículo"
                 style={[styles.textInput, {color: theme.textColor}]}
                 onChangeText={onChangeText}
             />
-            <TouchableOpacity style={styles.button} onPress={onPress}>               
+            <TouchableOpacity style={styles.button} onPress={clearTex}>               
                 <Icon color = { theme.accentColor} name='close' size={20}/>                        
             </TouchableOpacity>            
         </View>       
     );
 }
+export default React.memo(Search);
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',

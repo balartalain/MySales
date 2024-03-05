@@ -8,7 +8,7 @@ import {
   Text
 } from 'react-native';
 import codePush from 'react-native-code-push';
-import DrawerNav from './src/components/DrawerNav';
+import DrawerNav from './src/navigation/DrawerNav';
 import ThemeProvider from './src/ThemeProvider';
 function App() {
     return (

@@ -1,8 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { Button } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-import Tpv from './Tpv';
-import Details from './Details';
+import Tpv from '../screens/Tpv';
+import Details from '../screens/Details';
 import useTheme from '../useTheme';
 import useThemedStyles from '../useThemeStyles';
 

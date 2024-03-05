@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, Button, Text } from 'react-native';
-import { ThemedButton, ThemedTouchableOpacity } from './ThemedComponents';
+import { ThemedButton, ThemedTouchableOpacity } from '../components/ThemedComponents';
 import useTheme from '../useTheme';
 export default function Profile({ navigation }) {
   const theme = useTheme();

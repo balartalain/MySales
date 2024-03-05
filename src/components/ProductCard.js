@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 export default function ProductCard({ item }) {
+  //console.log('ProductCard')
   return (
     <TouchableOpacity
       style={{

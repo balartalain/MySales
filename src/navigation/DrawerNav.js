@@ -1,6 +1,6 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import StackNav from './StackNav';
-import Profile from './Profile';
+import Profile from '../screens/Profile';
 const Drawer = createDrawerNavigator();
 
 function DrawerNav() {

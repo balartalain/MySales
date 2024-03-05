@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { View, Button, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-import Display from './Display';
-import Search from './Search';
-import ProductList from './ProductList';
+import Display from '../components/Display';
+import Search from '../components/Search';
+import ProductList from '../components/ProductList';
 
 export default function Tpv({ navigation }) {
   React.useEffect(() => {

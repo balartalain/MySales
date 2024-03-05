@@ -57,18 +57,26 @@ export default function ProductList({onSelectItem}) {
     const theme = useTheme();
     const [searchValue, changeSearchValue] = React.useState('ABC');
     const [data, setData] = React.useState(origData);
+    const [selectedItem, setSelectedItem] = React.useState();
     const onSearchText = React.useCallback((text) =>{        
         const filterData = origData.filter(item=>item.name.includes(text) || text === '' )
         //console.log(text);
         setData(filterData);
     }, [])
+    const onPressItem =  React.useCallback((item)=>{
+        //console.log(item.id);
+        setSelectedItem(item.id);
+    }, []);
+    const renderItem =  React.useCallback(({item})=>{
+        return <ProductCard item={item} onPressItem={onPressItem} />
+    }, []);
     return (
         <View >      
             <Search onChangeText={onSearchText} />
             <FlatList
                 itemHeight={60}
                 data={data}
-                renderItem={ProductCard}
+                renderItem={renderItem}
                 keyExtractor={(item) => item.id}
             />
         </View>               

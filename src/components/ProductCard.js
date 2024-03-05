@@ -6,10 +6,11 @@ import {
   View,
 } from 'react-native';
 
-export default function ProductCard({ item }) {
-  //console.log('ProductCard')
+function ProductCard({ item, onPressItem }) {
+  console.log('ProductCard')
   return (
     <TouchableOpacity
+      onPress={()=>onPressItem(item)}
       style={{
         margin: 1,
         backgroundColor: '#fff',
@@ -40,3 +41,4 @@ export default function ProductCard({ item }) {
     </TouchableOpacity>
   );
 }
+export default React.memo(ProductCard);

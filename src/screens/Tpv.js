@@ -2,7 +2,6 @@ import * as React from 'react';
 import { View, Button, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import Display from '../components/Display';
-import Search from '../components/Search';
 import ProductList from '../components/ProductList';
 
 export default function Tpv({ navigation }) {
@@ -10,6 +9,7 @@ export default function Tpv({ navigation }) {
     navigation.setOptions({
       headerLeft: () => (
         <Icon 
+          style={{marginLeft: 5}}
           name='menu' 
           size={30} 
           color='#fff'
@@ -19,7 +19,7 @@ export default function Tpv({ navigation }) {
     });
   }, [navigation]);
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <Display/>
         <View style={{flex:6}}>
          <ProductList />
@@ -31,6 +31,6 @@ export default function Tpv({ navigation }) {
   const styles = StyleSheet.create({
     container: {
         flex:1,
-        backgroundColor: 'red'
+        //paddingHorizontal: 10
       },
   });

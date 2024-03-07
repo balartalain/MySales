@@ -1,7 +1,7 @@
 export default theme= {    
-      primaryColor: '#FFA72A',
-      accentColor: '#458622',
-      backgroundColor: '#FFC777',
+      primaryColor: '#FF9671',
+      accentColor: '#FFC75F',
+      backgroundColor: '#FF6F91',
       textColor: '#504f4d',
-      secondaryColor: '#7F5315'  
+      secondaryColor: '#D65DB1'  
   };

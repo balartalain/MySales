@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { View, Button, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { formatCurrency } from "../Utils";
 import useTheme from '../useTheme';
 export default function Display() {
+    const navigation = useNavigation();
     const theme = useTheme();
     const onPress = ()=>{
-        console.log('3434');
+      navigation.navigate('Carrito')
     }
     return (
         <View style={{flex:1, flexDirection: 'row'}}>

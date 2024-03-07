@@ -12,7 +12,7 @@ function ProductCard({ item, onPressItem }) {
     <TouchableOpacity
       onPress={()=>onPressItem(item)}
       style={{
-        margin: 1,
+        margin: 2,
         backgroundColor: '#fff',
         marginLeft: 5,
         marginRight: 5,

@@ -3,6 +3,7 @@ import { Button } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import Tpv from '../screens/Tpv';
 import Details from '../screens/Details';
+import ShoppingCart from '../screens/ShoppingCart';
 import useTheme from '../useTheme';
 import useThemedStyles from '../useThemeStyles';
 
@@ -31,7 +32,7 @@ function StackNav() {
         />
         { /*<Stack.Screen name="Notifications" component={Notifications} /> */}
         <Stack.Screen name="Details" component={Details} />
-        { /*< Stack.Screen name="Settings" component={Settings} /> */}
+        < Stack.Screen name="Carrito" component={ShoppingCart} />
       </Stack.Navigator>
     );
   }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, Button, Text } from 'react-native';
-import { ThemedButton, ThemedTouchableOpacity } from '../components/ThemedComponents';
+import { ThemedButton } from '../components/ThemedComponents';
 import useTheme from '../useTheme';
 export default function Profile({ navigation }) {
   const theme = useTheme();
@@ -8,9 +8,9 @@ export default function Profile({ navigation }) {
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{color: theme.textColor}}>Profile screen</Text>
         <ThemedButton bg='primaryColor'  title="primaryColor"/>
-        <ThemedTouchableOpacity bg='secondaryColor'>
+        <ThemedButton bg='secondaryColor'>
           <Text>secondaryColor</Text>
-        </ThemedTouchableOpacity>        
+        </ThemedButton>        
         <ThemedButton bg='accentColor'  title="accentColor" />
         <ThemedButton bg='textColor'  title="textColor" />
 

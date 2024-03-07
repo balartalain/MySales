@@ -6,7 +6,7 @@ import {
   View,
 } from 'react-native';
 import { ThemedButton } from '../components/ThemedComponents';
-
+import RnIncrementDecrementBtn from '../components/RnIncrementDecrementBtn/RnIncrementDecrementBtn';
 let data = [
     {
         id: 1,
@@ -32,13 +32,12 @@ let data = [
 ]
 
 function ListItem({item}) {
-  console.log('ShoppingCart')
   const onPressItem = ()=>{
 
   }
   return (
     <View
-      style={{
+      style={{        
         margin: 2,
         backgroundColor: '#fff',
         marginLeft: 5,
@@ -48,23 +47,24 @@ function ListItem({item}) {
         paddingVertical: 4,
         borderRadius: 0,
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: 'space-between'
       }}
     >
-      <View>
-        <Image
-          style={{ width: 50, height: 50, borderRadius: 0 }}
-          source={{ uri: item.picture }}
+        <View>
+            <Image
+            style={{ width: 50, height: 50, borderRadius: 0 }}
+            source={{ uri: item.picture }}
+            />
+        </View>
+        <RnIncrementDecrementBtn
+            activeColor={'accentColor'}
+            handleClick={(val)=>console.log(val)}
+            styleBtn={{width:40,height:40}}
+            styleTextInput={{width:40,height:40}}
+            labelStyle={{fontSize:20}}
+            iconStyle={{color:'blue', size:20}}
         />
-      </View>
-      <View style={{ flex: 1, paddingHorizontal: 10 }}>
-        <Text
-          style={{ fontSize: 16 }}
-        >{item.name}</Text>
-      </View>
-      <View>
-        <Text>{item.price}</Text>
-      </View>
     </View>
   );
 }
@@ -82,6 +82,7 @@ export default function ShoppingCart({navigation}){
             </View>
             <ThemedButton 
                 style={{margin:10}}
+                //textStyle={{fontSize:60}}
                 bg='accentColor'  
                 title="Pagar"  
                 onPress={()=>{}}           

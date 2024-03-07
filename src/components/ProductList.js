@@ -53,7 +53,7 @@ let origData = [
     }
 ]
 export default function ProductList({onSelectItem}) {
-    console.log('ProductList');
+    //console.log('ProductList');
     const theme = useTheme();
     const [searchValue, changeSearchValue] = React.useState('ABC');
     const [data, setData] = React.useState(origData);

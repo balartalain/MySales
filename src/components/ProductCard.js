@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 
 function ProductCard({ item, onPressItem }) {
-  console.log('ProductCard')
+  //console.log('ProductCard')
   return (
     <TouchableOpacity
       onPress={()=>onPressItem(item)}

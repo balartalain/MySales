@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import useTheme from '../useTheme';
 
 function Search({customStyles={}, onChangeText=()=>{}}) {
-    console.log('Search');
+    //console.log('Search');
     const inputRef = React.useRef(null);
     const theme = useTheme();
     const clearTex = ()=>{

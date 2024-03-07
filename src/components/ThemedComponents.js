@@ -11,7 +11,7 @@ function withStyles(Component) {
    
 const ThemedButton = ({children, ...props})=> {
   const theme = useTheme();
-  const backgroundColor =  props.bg?theme[props.bg]:undefined;
+  const backgroundColor =  props.bg?theme[props.bg]:'black';
   const btnStyles = {
     ...styles.button,
     ...props.style,
@@ -22,7 +22,7 @@ const ThemedButton = ({children, ...props})=> {
     ...props.textStyle
   }
   return (
-    <TouchableOpacity style={btnStyles}>
+    <TouchableOpacity style={btnStyles} onPress={props.onPress}>
       {
       !props.title?children
       :<Text style={btnText}>{props.title}</Text>
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 4,
-    elevation: 3,
+    //elevation: 3,
     backgroundColor: 'black',
   },
   text: {

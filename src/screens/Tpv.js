@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Button, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import Display from '../components/Display';
 import ProductList from '../components/ProductList';

@@ -6,6 +6,7 @@ import Details from '../screens/Details';
 import ShoppingCart from '../screens/ShoppingCart';
 import useTheme from '../useTheme';
 import useThemedStyles from '../useThemeStyles';
+import EditQty from '../screens/EditQty';
 
 const Stack = createStackNavigator();
 const salesHeaderStyles = (theme) => ({
@@ -30,9 +31,9 @@ function StackNav() {
         <Stack.Screen name="Tpv" component={Tpv} 
             options={salesThemedHeaderStyles}
         />
-        { /*<Stack.Screen name="Notifications" component={Notifications} /> */}
         <Stack.Screen name="Details" component={Details} />
-        < Stack.Screen name="Carrito" component={ShoppingCart} />
+        <Stack.Screen name="Carrito" component={ShoppingCart} />
+        <Stack.Screen name="EditQty" component={EditQty} />
       </Stack.Navigator>
     );
   }

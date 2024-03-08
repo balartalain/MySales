@@ -6,7 +6,8 @@ import {
   View,
 } from 'react-native';
 import { ThemedButton } from '../components/ThemedComponents';
-import RnIncrementDecrementBtn from '../components/RnIncrementDecrementBtn/RnIncrementDecrementBtn';
+import ProductCard from '../components/ProductCard';
+//import RnIncrementDecrementBtn from '../components/RnIncrementDecrementBtn/RnIncrementDecrementBtn';
 let data = [
     {
         id: 1,
@@ -36,7 +37,7 @@ function ListItem({item}) {
 
   }
   return (
-    <View
+    <TouchableOpacity
       style={{        
         margin: 2,
         backgroundColor: '#fff',
@@ -48,24 +49,17 @@ function ListItem({item}) {
         borderRadius: 0,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between'
       }}
     >
         <View>
             <Image
-            style={{ width: 50, height: 50, borderRadius: 0 }}
-            source={{ uri: item.picture }}
+                style={{ width: 50, height: 50, borderRadius: 0 }}
+                source={{ uri: item.picture }}
             />
         </View>
-        <RnIncrementDecrementBtn
-            activeColor={'accentColor'}
-            handleClick={(val)=>console.log(val)}
-            styleBtn={{width:40,height:40}}
-            styleTextInput={{width:40,height:40}}
-            labelStyle={{fontSize:20}}
-            iconStyle={{color:'blue', size:20}}
-        />
-    </View>
+        <Text>{item.name}</Text>
+        <Text>{item.price}</Text>
+    </TouchableOpacity>
   );
 }
 export default function ShoppingCart({navigation}){
@@ -75,7 +69,7 @@ export default function ShoppingCart({navigation}){
             {
                 data.map((item, i)=>(
                     <View key={i}>
-                        <ListItem item={item} />
+                        <ProductCard item={item} onPressItem={()=>{navigation.navigate('EditQty')}} />
                     </View>
                 ))            
             }

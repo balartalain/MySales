@@ -5,13 +5,16 @@ import { StatusBar} from 'react-native';
 import codePush from 'react-native-code-push';
 import DrawerNav from './src/navigation/DrawerNav';
 import ThemeProvider from './src/ThemeProvider';
+import {ProductProvider} from './src/ProductProvider';
 function App() {
   return (
-    <ThemeProvider>     
-      <StatusBar translucent backgroundColor="transparent" />         
-      <NavigationContainer>
-        <DrawerNav />
-      </NavigationContainer>          
+    <ThemeProvider>  
+      <ProductProvider>
+        <StatusBar translucent backgroundColor="transparent" />         
+        <NavigationContainer>
+          <DrawerNav />
+        </NavigationContainer>          
+      </ProductProvider>   
     </ThemeProvider>  
   );
 }

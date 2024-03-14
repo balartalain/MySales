@@ -29,14 +29,15 @@ const salesHeaderStyles = (theme) => ({
 function StackNav() {
   const salesThemedHeaderStyles = useThemedStyles(salesHeaderStyles); 
     return (
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{ animationEnabled: true }}>
         <Stack.Screen name="Tpv" component={Tpv} 
             options={salesThemedHeaderStyles}
         />
         <Stack.Screen name="Details" component={Details} />
         <Stack.Screen name="Carrito" component={ShoppingCart} />
         <Stack.Screen name="EditQty" component={EditQty} />
-        <Stack.Screen name="AddProduct" component={AddProduct} />
+        <Stack.Screen name="AddProduct" options={{ animationEnabled: false }} component={AddProduct} />
       </Stack.Navigator>
     );
   }

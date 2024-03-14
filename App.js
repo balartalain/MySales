@@ -6,6 +6,7 @@ import codePush from 'react-native-code-push';
 import DrawerNav from './src/navigation/DrawerNav';
 import ThemeProvider from './src/ThemeProvider';
 import {ProductProvider} from './src/ProductProvider';
+
 function App() {
   return (
     <ThemeProvider>  

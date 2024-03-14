@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, StyleSheet, Image, Text } from 'react-native';
 import RNFS from 'react-native-fs';
 import { useProduct } from '../ProductProvider';
 import { ThemedButton } from '../components/ThemedComponents';
@@ -27,8 +27,8 @@ const AddProduct = ({navigation}) => {
     };
 
     useEffect(() => {
-      const directoryPath = RNFS.PicturesDirectoryPath;
-  
+      const directoryPath = RNFS.DocumentDirectoryPath ;
+      console.log(directoryPath);
       RNFS.readdir(directoryPath)
         .then(files => {
           setDirectories(files);
@@ -40,7 +40,6 @@ const AddProduct = ({navigation}) => {
 
     return (
     <View style={styles.container}>
-        <Image style={{width:50, height:50}} source={require("../../assets/images/no-image.png")}/>
         <TextInput
         style={styles.input}
         placeholder="Nombre"
@@ -54,6 +53,13 @@ const AddProduct = ({navigation}) => {
         onChangeText={(value) => handleInputChange('price', value)}
         keyboardType="numeric"
         />
+        <View style={{flexDirection: 'row', marginBottom: 10, borderRadius:5, borderWidth:1, borderColor: '#ccc'}}>
+          <Image style={{width:100, height:100}} source={require("../../assets/images/no-image.png")}/>
+          <View style={{justifyContent: 'space-around'}}>
+            <ThemedButton style={{paddingVertical: 6}} bg={'primaryColor'} title="Elija una foto" onPress={handleAddProduct} />
+            <ThemedButton style={{paddingVertical: 6}} bg={'primaryColor'} title="Tomar una foto" onPress={handleAddProduct} />    
+          </View>
+        </View>
         <ThemedButton bg={'primaryColor'} title="Agregar Producto" onPress={handleAddProduct} />
         <View>
           <Text>Directory List:</Text>

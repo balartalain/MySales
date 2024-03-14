@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import { View, Text } from 'react-native';
 import styles from './style';
 import { ThemedButton } from '../ThemedComponents';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -17,7 +17,7 @@ const RnIncrementDecrementBtn = ({
   disabledColor,
   activeColor,
   labelStyle,
-  iconStyle={}
+  iconStyle = {},
 }) => {
   const [value, changeValue] = React.useState(0);
   const [count, changeCount] = React.useState(100);
@@ -44,32 +44,32 @@ const RnIncrementDecrementBtn = ({
 
       changeRightBtnDisable(val <= 0);
     }
-    if(minVal){
-      changeRightBtnDisable(value<=minVal);
+    if (minVal) {
+      changeRightBtnDisable(value <= minVal);
       addMinValue(minVal);
     }
-    if(disabledColor){
+    if (disabledColor) {
       addDisableColor(disabledColor);
     }
-    if(activeColor){
+    if (activeColor) {
       addActiveColor(activeColor);
     }
-  }, [val, max, minreq,minVal,disabledColor,activeColor]);
+  }, [value, val, max, minreq, minVal, disabledColor, activeColor]);
 
   // function to handle btn click
-  const handlePress = val => {
+  const handlePress = (val) => {
     handleClick ? handleClick(val) : {};
   };
-  
+
   return (
-    <View style={styles.viewOuter}>     
-      <ThemedButton 
+    <View style={styles.viewOuter}>
+      <ThemedButton
         bg={leftBtnDisable || disableControl ? disableColorBtn : activeColorBtn}
         style={{
           ...styles.viewBtnLeft,
           ...styleBtn,
           paddingHorizontal: 0,
-          paddingVertical: 0
+          paddingVertical: 0,
         }}
         textStyle={labelStyle ? labelStyle : styles.labelStyle}
         disabled={leftBtnDisable || disableControl}
@@ -92,22 +92,25 @@ const RnIncrementDecrementBtn = ({
             }
             changeRightBtnDisable(false);
           }
-        }}> 
-        <Icon name='plus' size={iconStyle.size || 20} color={ iconStyle.color || '#fff' } />
+        }}
+      >
+        <Icon name="plus" size={iconStyle.size || 20} color={iconStyle.color || '#fff'} />
       </ThemedButton>
       <View style={[styles.viewTextInput, styleTextInput]}>
-        <Text style={[{color: '#000000'},labelStyle ? labelStyle : styles.labelStyle]}>{value}</Text>
+        <Text style={[{ color: '#000000' }, labelStyle ? labelStyle : styles.labelStyle]}>
+          {value}
+        </Text>
       </View>
-      <ThemedButton 
+      <ThemedButton
         bg={rightBtnDisable || disableControl ? disableColorBtn : activeColorBtn}
         style={{
-          ... styles.viewBtnRight,
+          ...styles.viewBtnRight,
           ...styleBtn,
           paddingHorizontal: 0,
-          paddingVertical: 0
+          paddingVertical: 0,
         }}
-        textStyle={ labelStyle ? labelStyle : styles.labelStyle}
-        labelStyle={ labelStyle ? labelStyle : styles.labelStyle}
+        textStyle={labelStyle ? labelStyle : styles.labelStyle}
+        labelStyle={labelStyle ? labelStyle : styles.labelStyle}
         disabled={rightBtnDisable || disableControl}
         color={'#ffffff'}
         onPress={() => {
@@ -127,12 +130,13 @@ const RnIncrementDecrementBtn = ({
             }
           } else {
             changeLeftBtnDisable(false);
-            changeCount(count+1);
+            changeCount(count + 1);
             changeValue(value - 1);
             handlePress(value - 1);
           }
-        }}>    
-         <Icon name='minus'  size={iconStyle.size || 20} color={ iconStyle.color || '#fff' } />    
+        }}
+      >
+        <Icon name="minus" size={iconStyle.size || 20} color={iconStyle.color || '#fff'} />
       </ThemedButton>
     </View>
   );

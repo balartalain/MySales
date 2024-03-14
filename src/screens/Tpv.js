@@ -8,29 +8,28 @@ export default function Tpv({ navigation }) {
   React.useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <Icon 
-          style={{marginLeft: 5}}
-          name='menu' 
-          size={30} 
-          color='#fff'
-          onPress={()=>navigation.openDrawer()} 
+        <Icon
+          style={{ marginLeft: 5 }}
+          name="menu"
+          size={30}
+          color="#fff"
+          onPress={() => navigation.openDrawer()}
         />
       ),
     });
   }, [navigation]);
-    return (
-      <View style={styles.container}>
-        <Display/>
-        <View style={{flex:6}}>
-         <ProductList />
-        </View>
+  return (
+    <View style={styles.container}>
+      <Display />
+      <View style={{ flex: 6 }}>
+        <ProductList />
       </View>
-
-    );
-  }
-  const styles = StyleSheet.create({
-    container: {
-        flex:1,
-        //paddingHorizontal: 10
-      },
-  });
+    </View>
+  );
+}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    //paddingHorizontal: 10
+  },
+});

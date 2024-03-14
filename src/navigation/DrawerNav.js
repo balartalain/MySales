@@ -1,4 +1,3 @@
-import { StatusBar } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/Entypo';
 import StackNav from './StackNav';
@@ -13,27 +12,22 @@ const productsHeaderStyles = (theme) => ({
   },
   headerTintColor: '#fff',
   headerTitleStyle: {
-    fontWeight: 'bold'      
+    fontWeight: 'bold',
   },
   headerTitleAlign: 'center',
   //headerTitle: (props) => <Button {...props} title='Ticket'/>,
-  headerRight: ()=>{
-      return <Icon />
-   }
-})
+  headerRight: () => {
+    return <Icon />;
+  },
+});
 function DrawerNav() {
-  const productsThemedHeaderStyles = useThemedStyles(productsHeaderStyles); 
-    return (
-      <Drawer.Navigator>       
-        <Drawer.Screen name="Sale" 
-          component={StackNav} 
-          options={{headerShown: false}}
-        />
-        <Drawer.Screen name="Profile" component={Profile} />
-        <Drawer.Screen name="Products" component={Products} options={
-            productsThemedHeaderStyles
-        } />
-      </Drawer.Navigator>      
-    );
+  const productsThemedHeaderStyles = useThemedStyles(productsHeaderStyles);
+  return (
+    <Drawer.Navigator>
+      <Drawer.Screen name="Sale" component={StackNav} options={{ headerShown: false }} />
+      <Drawer.Screen name="Profile" component={Profile} />
+      <Drawer.Screen name="Products" component={Products} options={productsThemedHeaderStyles} />
+    </Drawer.Navigator>
+  );
 }
 export default DrawerNav;

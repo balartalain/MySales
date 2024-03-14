@@ -1,9 +1,9 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProductContext = React.createContext();
 
-const ProductProvider = ({children}) => {
+const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   // Cargar productos almacenados al inicio
   const loadProducts = async () => {
@@ -11,7 +11,7 @@ const ProductProvider = ({children}) => {
       await AsyncStorage.clear();
       const storedProducts = await AsyncStorage.getItem('products');
       if (storedProducts !== null) {
-       setProducts(JSON.parse(storedProducts));
+        setProducts(JSON.parse(storedProducts));
       }
     } catch (error) {
       console.error('Error loading products from AsyncStorage:', error);
@@ -27,12 +27,12 @@ const ProductProvider = ({children}) => {
     await AsyncStorage.setItem('products', JSON.stringify(updatedProducts));
   };
   return (
-    <ProductContext.Provider value={{products, addProduct}}>{children}</ProductContext.Provider>
+    <ProductContext.Provider value={{ products, addProduct }}>{children}</ProductContext.Provider>
   );
 };
 
 const useProduct = () => {
   return useContext(ProductContext);
- };
+};
 
-export {ProductProvider, ProductContext, useProduct};
+export { ProductProvider, ProductContext, useProduct };

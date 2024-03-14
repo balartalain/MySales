@@ -1,7 +1,7 @@
-import {Dimensions, PixelRatio, StyleSheet} from 'react-native';
+import { Dimensions, PixelRatio, StyleSheet } from 'react-native';
 
-let {height} = Dimensions.get('window');
-let {width} = Dimensions.get('window');
+let { height } = Dimensions.get('window');
+let { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   viewOuter: {
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     height: PixelRatio.roundToNearestPixel((height * 5) / 100),
     width: PixelRatio.roundToNearestPixel((width * 8) / 100),
   },
-  labelStyle:{
+  labelStyle: {
     fontSize: 10,
   },
 });

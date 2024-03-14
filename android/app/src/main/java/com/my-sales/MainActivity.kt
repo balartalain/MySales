@@ -1,4 +1,4 @@
-package com.codepush
+package com.mysales
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

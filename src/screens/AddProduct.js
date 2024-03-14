@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
+import { View, TextInput, StyleSheet, Image } from 'react-native';
+import RNFS from 'react-native-fs';
 import { useProduct } from '../ProductProvider';
 import { ThemedButton } from '../components/ThemedComponents';
 
 const AddProduct = ({navigation}) => {
     const {addProduct} = useProduct();
+    const [directories, setDirectories] = useState([]);
     const [product, setProduct] = useState({
       image: '',
       name: '',
@@ -23,14 +25,22 @@ const AddProduct = ({navigation}) => {
         price: '',
     });
     };
+
+    useEffect(() => {
+      const directoryPath = RNFS.PicturesDirectoryPath;
+  
+      RNFS.readdir(directoryPath)
+        .then(files => {
+          setDirectories(files);
+        })
+        .catch(error => {
+          console.log('Error reading directory:', error);
+        });
+    }, []);
+
     return (
     <View style={styles.container}>
-        <TextInput
-        style={styles.input}
-        placeholder="URL de imagen"
-        value={product.image}
-        onChangeText={(value) => handleInputChange('image', value)}
-        />
+        <Image style={{width:50, height:50}} source={require("../../assets/images/no-image.png")}/>
         <TextInput
         style={styles.input}
         placeholder="Nombre"
@@ -45,6 +55,12 @@ const AddProduct = ({navigation}) => {
         keyboardType="numeric"
         />
         <ThemedButton bg={'primaryColor'} title="Agregar Producto" onPress={handleAddProduct} />
+        <View>
+          <Text>Directory List:</Text>
+          {directories.map((directory, index) => (
+            <Text key={index}>{directory}</Text>
+          ))}
+        </View>
     </View>
     );
 };

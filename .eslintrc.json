@@ -16,7 +16,8 @@
     "react/react-in-jsx-scope": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "error",
-    "comma-dangle": "off"
+    "comma-dangle": "off",
+    "prettier/prettier": ["error", { "endOfLine": "auto" }]
   },
   "settings": {
     "react": {

@@ -3,20 +3,21 @@ import { View, TextInput, StyleSheet, Image, Text } from 'react-native';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import { ThemedButton } from './ThemedComponents';
 
-const TakePhoto = ({ initialImage, onSelectedImage }) => {
-  const [image, setSelectedImage] = useState(initialImage);
+const TakePhoto = ({ picture: initialPicture, onSelectedPicture }) => {
+  const [picture, setPicture] = useState();
+  console.log('Take Photo: ' + picture);
 
-  console.log('Image: ' + image);
   useEffect(() => {
-    setSelectedImage(initialImage);
-  }, [initialImage]);
+    setPicture(initialPicture);
+  }, [initialPicture]);
 
   const openImagePicker = () => {
     const options = {
       mediaType: 'photo',
       includeBase64: false,
-      maxHeight: 2000,
-      maxWidth: 2000,
+      maxHeight: 200,
+      maxWidth: 200,
+      selectionLimit: 1,
     };
 
     launchImageLibrary(options, (response) => {
@@ -25,11 +26,11 @@ const TakePhoto = ({ initialImage, onSelectedImage }) => {
       } else if (response.error) {
         console.log('Image picker error: ', response.error);
       } else {
-        let imageUri = response.uri || response.assets?.[0]?.uri;
-        if (onSelectedImage) {
-          onSelectedImage(imageUri);
+        let imageUri = response.assets?.[0]?.uri;
+        if (onSelectedPicture) {
+          onSelectedPicture(imageUri);
         }
-        setSelectedImage(imageUri);
+        setPicture(imageUri);
       }
     });
   };
@@ -49,18 +50,24 @@ const TakePhoto = ({ initialImage, onSelectedImage }) => {
         console.log('Camera Error: ', response.error);
       } else {
         let imageUri = response.uri || response.assets?.[0]?.uri;
-        setSelectedImage(imageUri);
-        //console.log(imageUri);
+        if (onSelectedPicture) {
+          onSelectedPicture(imageUri);
+        }
+        setPicture(imageUri);
       }
     });
   };
 
   return (
     <View style={{ flexDirection: 'row', paddingVertical: 10, gap: 5 }}>
-      <Image
-        style={{ width: 90, height: 90 }}
-        source={image !== '' ? { uri: image } : require('../../assets/images/no-image.png')}
-      />
+      {picture ? (
+        <Image style={{ width: 90, height: 90 }} source={{ uri: picture }} />
+      ) : (
+        <Image
+          style={{ width: 90, height: 90 }}
+          source={require('../../assets/images/no-image.png')}
+        />
+      )}
       <View style={{ justifyContent: 'space-between' }}>
         <ThemedButton
           style={{ paddingVertical: 6 }}

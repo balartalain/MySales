@@ -23,6 +23,7 @@ const ProductProvider = ({ children }) => {
   }, []);
   const addProduct = async (product) => {
     const updatedProducts = [...products, product];
+    //console.log(updatedProducts);
     setProducts(updatedProducts);
     await AsyncStorage.setItem('products', JSON.stringify(updatedProducts));
   };

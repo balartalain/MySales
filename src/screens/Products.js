@@ -1,11 +1,14 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import { useProduct } from '../ProductProvider';
 
 const renderProductItem = ({ item }) => (
   <View style={styles.productItem}>
-    {/*<Image source={{ uri: item.image }} style={styles.productImage} />*/}
+    <Image
+      source={item.photo ? { uri: item.photo } : require('../../assets/images/no-image.png')}
+      style={styles.productImage}
+    />
     <View style={styles.productInfo}>
       <Text style={styles.productName}>{item.name}</Text>
       <Text style={styles.productPrice}>Precio: ${item.price}</Text>

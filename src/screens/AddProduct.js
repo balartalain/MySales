@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, TextInput, StyleSheet, Image, Text } from 'react-native';
-import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import RNFS from 'react-native-fs';
 import { useProduct } from '../ProductProvider';
 import { ThemedButton } from '../components/ThemedComponents';
@@ -19,6 +18,7 @@ const AddProduct = ({ navigation }) => {
     setProduct({ ...product, [fieldName]: value });
   };
   const handleAddProduct = () => {
+    product.image = saveImage(product.image);
     addProduct(product);
     // Limpiar el estado del producto después de agregarlo
     setProduct({
@@ -27,28 +27,17 @@ const AddProduct = ({ navigation }) => {
       price: '',
     });
   };
-  const createPictureDir = async () => {
-    try {
-      const picturePath = `${RNFS.DocumentDirectoryPath}/images`;
-      console.log(picturePath);
-      await RNFS.mkdir(picturePath);
-    } catch (error) {
-      console.log('Error creating directory:', error);
-    }
-  };
-  // useEffect(() => {
-  //   //createPictureDir();
-  //   const directoryPath = RNFS.DocumentDirectoryPath ;
-
-  //   console.log(directoryPath);
-  //   RNFS.readdir(directoryPath)
-  //     .then(files => {º
-  //       setDirectories(files);
-  //     })
-  //     .catch(error => {
-  //       console.log('Error reading directory:', error);
-  //     });
-  // }, []);
+  useEffect(() => {
+    //createPictureDir();
+    const directoryPath = `${RNFS.DocumentDirectoryPath}/images`;
+    RNFS.readdir(directoryPath)
+      .then((files) => {
+        setDirectories(files);
+      })
+      .catch((error) => {
+        console.log('Error reading directory:', error);
+      });
+  }, [product]);
   const onSelectedImage = useCallback((imageUri) => {
     setProduct((p) => ({ ...p, image: imageUri }));
   }, []);
@@ -60,7 +49,7 @@ const AddProduct = ({ navigation }) => {
         .then(() => {
           RNFS.moveFile(filePath, newFilepath)
             .then(() => {
-              console.log('FILE MOVED', filePath, newFilepath);
+              //console.log('FILE MOVED', filePath, newFilepath);
               resolve(true);
             })
             .catch((error) => {
@@ -82,7 +71,6 @@ const AddProduct = ({ navigation }) => {
       const hours = String(date.getHours()).padStart(2, '0');
       const minutes = String(date.getMinutes()).padStart(2, '0');
       const seconds = String(date.getSeconds()).padStart(2, '0');
-
       return `${day}${month}${year}_${hours}${minutes}${seconds}`;
     }
     try {
@@ -90,8 +78,9 @@ const AddProduct = ({ navigation }) => {
       const newImageName = `${product.name.replace(/ /g, '')}_${formatDate(new Date())}.jpg`;
       const newFilepath = `${dirPictures}/${newImageName}`;
       // move and save image to new filepath
-      const imageMoved = await moveAttachment(filePath, newFilepath);
-      console.log('image moved', imageMoved);
+      await moveAttachment(filePath, newFilepath);
+      return newImageName;
+      //setProduct({ ...product, image: newFilepath });
     } catch (error) {
       console.log(error);
     }
@@ -120,7 +109,7 @@ const AddProduct = ({ navigation }) => {
           borderColor: '#ccc',
         }}
       >
-        <TakePhoto onSelectedImage={onSelectedImage} />
+        <TakePhoto initialImage={product.image} onSelectedImage={onSelectedImage} />
       </View>
       <ThemedButton bg={'primaryColor'} title="Agregar Producto" onPress={handleAddProduct} />
       <View>

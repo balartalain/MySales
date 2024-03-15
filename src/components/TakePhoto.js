@@ -3,10 +3,14 @@ import { View, TextInput, StyleSheet, Image, Text } from 'react-native';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import { ThemedButton } from './ThemedComponents';
 
-const TakePhoto = ({ onSelectedImage }) => {
-  const [image, setSelectedImage] = useState(null);
+const TakePhoto = ({ initialImage, onSelectedImage }) => {
+  const [image, setSelectedImage] = useState(initialImage);
 
-  console.log('TakePhoto');
+  console.log('Image: ' + image);
+  useEffect(() => {
+    setSelectedImage(initialImage);
+  }, [initialImage]);
+
   const openImagePicker = () => {
     const options = {
       mediaType: 'photo',
@@ -22,7 +26,6 @@ const TakePhoto = ({ onSelectedImage }) => {
         console.log('Image picker error: ', response.error);
       } else {
         let imageUri = response.uri || response.assets?.[0]?.uri;
-        console.log(imageUri);
         if (onSelectedImage) {
           onSelectedImage(imageUri);
         }
@@ -47,7 +50,7 @@ const TakePhoto = ({ onSelectedImage }) => {
       } else {
         let imageUri = response.uri || response.assets?.[0]?.uri;
         setSelectedImage(imageUri);
-        console.log(imageUri);
+        //console.log(imageUri);
       }
     });
   };
@@ -56,7 +59,7 @@ const TakePhoto = ({ onSelectedImage }) => {
     <View style={{ flexDirection: 'row', paddingVertical: 10, gap: 5 }}>
       <Image
         style={{ width: 90, height: 90 }}
-        source={image ? { uri: image } : require('../../assets/images/no-image.png')}
+        source={image !== '' ? { uri: image } : require('../../assets/images/no-image.png')}
       />
       <View style={{ justifyContent: 'space-between' }}>
         <ThemedButton

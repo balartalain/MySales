@@ -5,6 +5,13 @@ const ProductContext = React.createContext();
 
 const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
+  const generateProductCode = async () => {
+    let nextCode = (await AsyncStorage.getItem('sequenceCode')) || 0;
+    nextCode = parseInt(nextCode, 10) + 1;
+    await AsyncStorage.setItem('sequenceCode', nextCode.toString());
+    const paddedCode = nextCode.toString().padStart(4, '0'); // Asegura que el código tenga 4 dígitos
+    return paddedCode;
+  };
   // Cargar productos almacenados al inicio
   const loadProducts = async () => {
     try {
@@ -22,8 +29,9 @@ const ProductProvider = ({ children }) => {
     loadProducts();
   }, []);
   const addProduct = async (product) => {
+    const code = await generateProductCode();
+    product.code = code;
     const updatedProducts = [...products, product];
-    //console.log(updatedProducts);
     setProducts(updatedProducts);
     await AsyncStorage.setItem('products', JSON.stringify(updatedProducts));
   };

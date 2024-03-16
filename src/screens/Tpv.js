@@ -5,6 +5,7 @@ import Display from '../components/Display';
 import ProductList from '../components/ProductList';
 
 export default function Tpv({ navigation }) {
+  console.log('TPV');
   React.useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
@@ -30,6 +31,6 @@ export default function Tpv({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //paddingHorizontal: 10
+    //padding: 10,
   },
 });

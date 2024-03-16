@@ -1,26 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 
 function ProductCard({ item, onPressItem }) {
   //console.log('ProductCard')
   return (
-    <TouchableOpacity
-      onPress={() => onPressItem(item)}
-      style={{
-        margin: 2,
-        backgroundColor: '#fff',
-        marginLeft: 5,
-        marginRight: 5,
-        paddingLeft: 2,
-        paddingRight: 10,
-        paddingVertical: 4,
-        borderRadius: 0,
-        flexDirection: 'row',
-        alignItems: 'center',
-      }}
-    >
+    <TouchableOpacity onPress={() => onPressItem(item)} style={styles.productItem}>
       <View>
-        <Image style={{ width: 50, height: 50, borderRadius: 0 }} source={{ uri: item.picture }} />
+        <Image
+          style={styles.productImage}
+          source={item.image ? { uri: item.image } : require('../../assets/images/no-image.png')}
+        />
       </View>
       <View style={{ flex: 1, paddingHorizontal: 10 }}>
         <Text style={{ fontSize: 16 }}>{item.name}</Text>
@@ -31,4 +20,21 @@ function ProductCard({ item, onPressItem }) {
     </TouchableOpacity>
   );
 }
+const styles = StyleSheet.create({
+  productItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 2,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  },
+  productImage: {
+    width: 40,
+    height: 40,
+    marginRight: 10,
+    borderRadius: 5,
+  },
+});
 export default React.memo(ProductCard);

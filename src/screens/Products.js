@@ -6,7 +6,7 @@ import { useProduct } from '../ProductProvider';
 const renderProductItem = ({ item }) => (
   <View style={styles.productItem}>
     <Image
-      source={item.photo ? { uri: item.photo } : require('../../assets/images/no-image.png')}
+      source={item.image ? { uri: item.image } : require('../../assets/images/no-image.png')}
       style={styles.productImage}
     />
     <View style={styles.productInfo}>
@@ -55,8 +55,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   productImage: {
-    width: 80,
-    height: 80,
+    width: 40,
+    height: 40,
     marginRight: 10,
     borderRadius: 5,
   },

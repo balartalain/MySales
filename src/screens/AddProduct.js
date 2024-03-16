@@ -10,7 +10,7 @@ const AddProduct = ({ navigation }) => {
   const { addProduct } = useProduct();
   //const [directories, setDirectories] = useState([]);
   const [product, setProduct] = useState({
-    photo: undefined,
+    image: undefined,
     name: '',
     price: '',
   });
@@ -19,28 +19,33 @@ const AddProduct = ({ navigation }) => {
     setProduct({ ...product, [fieldName]: value });
   };
   const handleAddProduct = async () => {
-    if (product.photo) {
-      RNGRP.getRealPathFromURI(product.photo).then(async (filePath) => {
-        //console.log('VVVVV ' + filePath);
+    if (product.image) {
+      RNGRP.getRealPathFromURI(product.image).then(async (filePath) => {
         try {
-          const photo = await UTIL.FS.saveImage(filePath, product.name);
-          addProduct({ ...product, photo: `file://${photo}` });
+          const image = await UTIL.FS.saveImage(filePath, product.name);
+          addProduct({ ...product, image: `file://${image}` });
           setProduct({
-            photo: undefined,
+            image: undefined,
             name: '',
             price: '',
           });
         } catch (err) {
           console.log('ERROR: ' + err);
-          //product.photo = undefined;
+          //product.image = undefined;
         }
+      });
+    } else {
+      addProduct(product);
+      setProduct({
+        image: undefined,
+        name: '',
+        price: '',
       });
     }
   };
 
   const onSelectedPicture = useCallback((imageUri) => {
-    setProduct((p) => ({ ...p, photo: imageUri }));
-    //console.log('VVVVVVVVV ' + imageUri);
+    setProduct((p) => ({ ...p, image: imageUri }));
   }, []);
 
   return (
@@ -67,7 +72,7 @@ const AddProduct = ({ navigation }) => {
           borderColor: '#ccc',
         }}
       >
-        <TakePhoto picture={product.photo} onSelectedPicture={onSelectedPicture} />
+        <TakePhoto picture={product.image} onSelectedPicture={onSelectedPicture} />
       </View>
       <ThemedButton bg={'primaryColor'} title="Agregar Producto" onPress={handleAddProduct} />
     </View>

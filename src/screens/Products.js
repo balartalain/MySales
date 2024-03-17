@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import { useProduct } from '../ProductProvider';
-
+import { Store } from '../Store/Store';
 const renderProductItem = ({ item }) => (
   <View style={styles.productItem}>
     <Image

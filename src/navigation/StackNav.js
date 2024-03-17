@@ -26,17 +26,34 @@ const salesHeaderStyles = (theme) => ({
     return <Icon />;
   },
 });
+const productsHeaderStyles = (theme) => ({
+  //title: 'My home',
+  headerStyle: {
+    backgroundColor: theme.primaryColor,
+  },
+  headerTintColor: '#fff',
+  headerTitleStyle: {
+    fontWeight: 'bold',
+  },
+  headerTitleAlign: 'center',
+  //headerTitle: (props) => <Button {...props} title='Ticket'/>,
+  headerRight: () => {
+    return <Icon />;
+  },
+});
 function StackNav() {
   const salesThemedHeaderStyles = useThemedStyles(salesHeaderStyles);
+  const productsThemedHeaderStyles = useThemedStyles(productsHeaderStyles);
   return (
     <Stack.Navigator screenOptions={{ animationEnabled: true }}>
       <Stack.Screen name="Tpv" component={Tpv} options={salesThemedHeaderStyles} />
+      <Stack.Screen name="Products" component={Products} options={productsThemedHeaderStyles} />
       <Stack.Screen name="Details" component={Details} />
       <Stack.Screen name="Carrito" component={ShoppingCart} />
       <Stack.Screen name="EditQty" component={EditQty} />
       <Stack.Screen
         name="AddProduct"
-        options={{ animationEnabled: false }}
+        //options={{ animationEnabled: false }}
         component={AddProduct}
       />
     </Stack.Navigator>

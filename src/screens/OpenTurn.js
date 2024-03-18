@@ -3,6 +3,7 @@ import { View, Button, TextInput, StyleSheet } from 'react-native';
 import { TText } from '../components/ThemedText';
 import UTIL from '../utils/Utils';
 import { ThemedButton } from '../components/ThemedComponents';
+import { ScaledSheet } from 'react-native-size-matters';
 
 const OpenTurn = ({ navigation }) => {
   return (
@@ -14,18 +15,18 @@ const OpenTurn = ({ navigation }) => {
     </View>
   );
 };
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
-    padding: 20,
+    padding: '20@ms',
   },
   input: {
-    marginTop: 10,
-    marginBottom: 10,
-    padding: 10,
-    borderWidth: 1,
+    marginVertical: '10@vs',
+    padding: '10@ms',
+    borderWidth: '1@ms',
     borderColor: '#ccc',
-    borderRadius: 5,
-    fontSize: UTIL.adjust(16),
+    borderRadius: '5@ms',
+    //fontSize: UTIL.adjust(16),
+    fontSize: '16@ms',
   },
 });
 export default OpenTurn;

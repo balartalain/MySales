@@ -1,4 +1,6 @@
 import FS from './FS';
+import adjust from './Adjust';
+import formatCurrency from './FormatCurrency';
 function formatDate(inputDate, format) {
   if (!inputDate) {
     return '';
@@ -21,5 +23,7 @@ function formatDate(inputDate, format) {
 const UTIL = {
   FS,
   formatDate,
+  formatCurrency,
+  adjust,
 };
 export default UTIL;

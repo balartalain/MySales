@@ -8,6 +8,7 @@ import {
   Button,
   Pressable,
 } from 'react-native';
+import { TText } from './ThemedText';
 import useTheme from '../useTheme';
 
 // function withStyles(Component) {
@@ -35,7 +36,7 @@ const ThemedButton = ({ children, ...props }) => {
     </TouchableOpacity>
   );
 };
-export { ThemedButton };
+export { ThemedButton, TText };
 const styles = StyleSheet.create({
   button: {
     alignItems: 'center',

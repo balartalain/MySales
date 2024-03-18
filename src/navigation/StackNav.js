@@ -9,6 +9,7 @@ import useThemedStyles from '../useThemeStyles';
 import EditQty from '../screens/EditQty';
 import AddProduct from '../screens/AddProduct';
 import Products from '../screens/Products';
+import OpenTurn from '../screens/OpenTurn';
 
 const Stack = createStackNavigator();
 const salesHeaderStyles = (theme) => ({
@@ -55,6 +56,11 @@ function StackNav() {
         name="AddProduct"
         //options={{ animationEnabled: false }}
         component={AddProduct}
+      />
+      <Stack.Screen
+        name="OpenTurn"
+        //options={{ animationEnabled: false }}
+        component={OpenTurn}
       />
     </Stack.Navigator>
   );

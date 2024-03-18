@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import Display from '../components/Display';
 import ProductList from '../components/ProductList';
 import Store from '../Store/Store';
-import { ThemedButton } from '../components/ThemedComponents';
+import { ThemedButton, TText } from '../components/ThemedComponents';
 
 export default function Tpv({ navigation }) {
   console.log('TPV');
@@ -14,7 +14,7 @@ export default function Tpv({ navigation }) {
     (async () => {
       const _turn = await Store.getObject('turn');
       if (_turn) {
-        setTurn(true);
+        setTurn(false);
       }
     })();
   }, [setTurn]);
@@ -32,6 +32,10 @@ export default function Tpv({ navigation }) {
       ),
     });
   }, [navigation]);
+
+  const OpenTurn = React.useCallback(() => {
+    navigation.navigate('OpenTurn');
+  }, [navigation]);
   return (
     <View style={styles.container}>
       <Display />
@@ -46,10 +50,12 @@ export default function Tpv({ navigation }) {
             backgroundColor: '#fff',
             justifyContent: 'center',
             alignItems: 'center',
-            flex: 5,
+            flex: 6,
           }}
         >
-          <ThemedButton bg="primaryColor" title="Abrir turno" />
+          <Icon name="stopwatch" size={80} />
+          <TText h5 style={{ marginBottom: 10 }} title={'El turno esta cerrado'} />
+          <ThemedButton bg="primaryColor" title="Abrir el turno" onPress={OpenTurn} />
         </View>
       )}
     </View>

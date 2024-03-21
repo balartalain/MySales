@@ -31,6 +31,7 @@ const ProductProvider = ({ children }) => {
   const addProduct = async (product) => {
     const code = await generateProductCode();
     product.code = code;
+    product.order = products.length + 1;
     const updatedProducts = [...products, product];
     setProducts(updatedProducts);
     await AsyncStorage.setItem('products', JSON.stringify(updatedProducts));

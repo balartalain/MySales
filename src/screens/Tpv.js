@@ -3,21 +3,27 @@ import { View, StyleSheet, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import Display from '../components/Display';
 import ProductList from '../components/ProductList';
-import Store from '../Store/Store';
+import Store from '../DAL/AStorage';
 import { ThemedButton, TText } from '../components/ThemedComponents';
+import POS from '../DAL/Pos';
+import { useFocus } from '../hooks/useFocus';
 
 export default function Tpv({ navigation }) {
-  console.log('TPV');
-  const { turn, setTurn } = React.useState(false);
+  const { isFocused } = useFocus();
+  const [turn, setTurn] = React.useState(null);
 
   React.useEffect(() => {
     (async () => {
-      const _turn = await Store.getObject('turn');
-      if (_turn) {
-        setTurn(false);
+      if (isFocused) {
+        console.log('Use Effect');
+        const _turn = await POS.turn.get();
+        console.log(_turn);
+        if (_turn) {
+          setTurn((t) => ({ ..._turn }));
+        }
       }
     })();
-  }, [setTurn]);
+  });
 
   React.useEffect(() => {
     navigation.setOptions({

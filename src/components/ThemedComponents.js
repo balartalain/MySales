@@ -23,8 +23,8 @@ const ThemedButton = ({ children, ...props }) => {
   const backgroundColor = props.bg ? theme[props.bg] : 'black';
   const btnStyles = {
     ...styles.button,
-    ...props.style,
     backgroundColor,
+    ...props.style,
   };
   const btnText = {
     ...styles.text,

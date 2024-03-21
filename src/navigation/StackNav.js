@@ -10,7 +10,7 @@ import EditQty from '../screens/EditQty';
 import AddProduct from '../screens/AddProduct';
 import Products from '../screens/Products';
 import OpenTurn from '../screens/OpenTurn';
-
+import IPV from '../screens/Ipv';
 const Stack = createStackNavigator();
 const salesHeaderStyles = (theme) => ({
   //title: 'My home',
@@ -62,6 +62,7 @@ function StackNav() {
         //options={{ animationEnabled: false }}
         component={OpenTurn}
       />
+      <Stack.Screen name="Ipv" component={IPV} />
     </Stack.Navigator>
   );
 }

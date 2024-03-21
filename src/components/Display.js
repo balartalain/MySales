@@ -11,7 +11,7 @@ export default function Display() {
     navigation.navigate('Carrito');
   };
   return (
-    <View style={{ flex: 1, flexDirection: 'row' }}>
+    <View style={{ height: 100, flexDirection: 'row' }}>
       <View
         style={{
           flex: 4,

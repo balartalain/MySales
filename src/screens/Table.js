@@ -128,5 +128,6 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     textAlign: 'center',
   },
+  grid: {},
 });
 export default IPV;

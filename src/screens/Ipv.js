@@ -8,31 +8,59 @@ import { ThemedButton, TText } from '../components/ThemedComponents';
 import POS from '../DAL/Pos';
 import { useFocus } from '../hooks/useFocus';
 
-const RenderRow = ({ product, key }) => {
-  console.log(product);
+const columns = [
+  {
+    name: 'initialQty',
+    label: 'Cant. Inicial',
+  },
+  {
+    name: 'soldQty',
+    label: 'Cant. Vendida',
+  },
+  { name: 'inStock', label: 'Existencia' },
+  { name: 'monto', label: 'Monto' },
+  { name: 'blank', label: '' },
+];
+
+const RenderRow = ({ product, index }) => {
   return (
     <View
-      key={key}
       style={{
         flexDirection: 'row',
-        backgroundColor: key % 2 == 0 ? '#f9f9f9' : undefined,
+        backgroundColor: index % 2 == 0 ? '#f9f9f9' : 'undefined',
       }}
     >
-      {Object.keys(product).map((col, i) => (
+      {columns.map((col, i) => (
         <View style={styles.containerCell} key={i}>
-          <Text style={styles.textCell}>{product[col]}</Text>
+          <Text style={styles.textCell}>{product[col.name]}</Text>
         </View>
       ))}
     </View>
   );
 };
-const IPV = () => {
+const IPV = async () => {
   const { products } = useProduct();
-  const [productsSorted, setProductsSorted] = React.useState([]);
-
-  React.useEffect(() => {
-    setProductsSorted(products.sort((a, b) => a.order - b.order));
+  //const [productsSorted, setProductsSorted] = React.useState([]);
+  const [ipv, setIPV] = React.useState([]);
+  //console.log('AASASASAS ' + (await POS.turn.getIPV()));
+  const fillIPV = React.useCallback(async () => {
+    const productSorted = products.sort((a, b) => a.order - b.order);
+    let _ipv = await POS.turn.getIPV();
+    if (!_ipv) {
+      _ipv = productSorted.map((p) => ({
+        code: p.code,
+        name: p.name,
+        initialQty: 0,
+        soldQty: 0,
+        inStock: 0,
+        monto: 0,
+      }));
+    }
+    setIPV(_ipv);
   }, [products]);
+  React.useEffect(() => {
+    fillIPV();
+  }, [fillIPV]);
 
   const scrollOuterRef = React.useRef();
   const scrollInnerRef = React.useRef();
@@ -60,6 +88,7 @@ const IPV = () => {
   };
 
   const productNames = products.map((p) => p.name);
+
   return (
     <View style={styles.container}>
       <View style={styles.leftColumn}>
@@ -84,12 +113,12 @@ const IPV = () => {
       </View>
       <View style={styles.grid}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {/* inner grid - horizontal scroll */}
+          {/* inner grid  */}
           <View>
             <View style={{ flexDirection: 'row' }}>
-              {headers.map((h, i) => (
+              {columns.map((col, i) => (
                 <View style={styles.headerItem} key={i}>
-                  <Text style={styles.headerItemText}>{h}</Text>
+                  <Text style={styles.headerItemText}>{col.label}</Text>
                 </View>
               ))}
             </View>
@@ -102,8 +131,8 @@ const IPV = () => {
               onScrollEndDrag={onScrollEndDrag}
             >
               <View>
-                {productsSorted.map((p, index) => (
-                  <RenderRow product={p} key={index} />
+                {ipv.map((p, index) => (
+                  <RenderRow product={p} key={index} index={index} />
                 ))}
               </View>
             </ScrollView>
@@ -139,7 +168,8 @@ const styles = StyleSheet.create({
   },
   textLeftCell: {
     paddingVertical: 15,
-    textAlign: 'center',
+    paddingLeft: 15,
+    textAlign: 'left',
   },
   grid: {},
 });

@@ -8,6 +8,7 @@ import POS from '../DAL/Pos';
 const OpenTurn = ({ navigation }) => {
   const style = useResponsiveStyles(styles);
   const [fund, setFund] = React.useState();
+  POS.turn.close();
   const handleInputChange = (value) => {
     setFund(value);
   };
@@ -17,7 +18,7 @@ const OpenTurn = ({ navigation }) => {
       fund,
     };
     await POS.turn.save(turn);
-    await POS.turn.get();
+    navigation.navigate('Ipv');
   };
   const createIpv = () => {
     navigation.navigate('Ipv');

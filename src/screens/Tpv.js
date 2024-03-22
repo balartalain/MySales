@@ -3,7 +3,6 @@ import { View, StyleSheet, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import Display from '../components/Display';
 import ProductList from '../components/ProductList';
-import Store from '../DAL/AStorage';
 import { ThemedButton, TText } from '../components/ThemedComponents';
 import POS from '../DAL/Pos';
 import { useFocus } from '../hooks/useFocus';
@@ -11,13 +10,11 @@ import { useFocus } from '../hooks/useFocus';
 export default function Tpv({ navigation }) {
   const { isFocused } = useFocus();
   const [turn, setTurn] = React.useState(null);
-
   React.useEffect(() => {
     (async () => {
       if (isFocused) {
-        console.log('Use Effect');
+        POS.turn.close();
         const _turn = await POS.turn.get();
-        console.log(_turn);
         if (_turn) {
           setTurn((t) => ({ ..._turn }));
         }

@@ -29,8 +29,8 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 //   );
 // };
 let itemBeingDragged;
-let draggedOverItem;
-let newDraggedOverItem;
+let lastDraggedOverItem;
+let currentDraggedOverItem;
 const DraggableArea = ({ _data }) => {
   const pan = useRef(new Animated.ValueXY()).current;
   const itemRefs = useRef([]);
@@ -77,8 +77,10 @@ const DraggableArea = ({ _data }) => {
         return false;
       },
       onPanResponderGrant: (e, gestureState) => {
+        //console.log(gestureState);
         if (itemBeingDragged) {
           updateItemState(itemBeingDragged, { isBeingDragged: true, bgColor: 'yellow' });
+          //console.log(pan);
         }
       },
       //   onPanResponderGrant: (evt, gestureState) => {
@@ -93,34 +95,59 @@ const DraggableArea = ({ _data }) => {
           updateItemState(itemBeingDragged, { isBeingDragged: false, bgColor: undefined });
           //setItemDragging(undefined);
         }
-        if (draggedOverItem) {
-          updateItemState(draggedOverItem, { bgColor: undefined });
+        if (lastDraggedOverItem) {
+          updateItemState(lastDraggedOverItem, { bgColor: undefined });
         }
-        if (newDraggedOverItem) {
-          updateItemState(newDraggedOverItem, { bgColor: undefined });
+        if (currentDraggedOverItem) {
+          updateItemState(currentDraggedOverItem, { bgColor: undefined });
         }
-        itemBeingDragged = draggedOverItem = newDraggedOverItem = undefined;
+        itemBeingDragged = lastDraggedOverItem = lastDraggedOverItem = undefined;
       },
-      onPanResponderMove: (evt, gestureState) => {
-        const { moveX, moveY } = gestureState;
-        // Do nothing if dnd is disabled
-        // if (!this.state.dndEnabled) {
-        //   return;
-        // }
-        // Find the tag we're dragging the current tag over
-        newDraggedOverItem = findItemAtCoordinates(moveX, moveY, itemBeingDragged);
-        if (
-          newDraggedOverItem &&
-          (!draggedOverItem || draggedOverItem.code !== newDraggedOverItem.code)
-        ) {
-          updateItemState(newDraggedOverItem, { bgColor: 'red' });
-          if (draggedOverItem) {
-            updateItemState(draggedOverItem, { bgColor: undefined });
+      onPanResponderMove: Animated.event([null, { dy: pan.y }], {
+        useNativeDriver: false,
+        listener: (evt) => {
+          const { pageX, pageY } = evt.nativeEvent;
+          let neededUpdate = false;
+          currentDraggedOverItem = findItemAtCoordinates(pageX, pageY, itemBeingDragged);
+          if (currentDraggedOverItem && lastDraggedOverItem !== currentDraggedOverItem) {
+            //updateItemState(currentDraggedOverItem, { bgColor: 'red' });
+            console.log('Caso 1');
+            neededUpdate = true;
           }
-          draggedOverItem = newDraggedOverItem;
-          //this.swapTags(this.tagBeingDragged, draggedOverTag);
-        }
-      },
+          if (!currentDraggedOverItem && lastDraggedOverItem) {
+            neededUpdate = true;
+          }
+          if (neededUpdate) {
+            if (currentDraggedOverItem) {
+              updateItemState(currentDraggedOverItem, { bgColor: 'red' });
+            }
+            if (lastDraggedOverItem) {
+              //updateItemState(lastDraggedOverItem, { bgColor: undefined });
+            }
+          }
+          lastDraggedOverItem = currentDraggedOverItem;
+        },
+      }),
+      // onPanResponderMove: (evt, gestureState) => {
+      //   const { moveX, moveY } = gestureState;
+      //   // Do nothing if dnd is disabled
+      //   // if (!this.state.dndEnabled) {
+      //   //   return;
+      //   // }
+      //   // Find the tag we're dragging the current tag over
+      //   newDraggedOverItem = findItemAtCoordinates(moveX, moveY, itemBeingDragged);
+      //   if (
+      //     newDraggedOverItem &&
+      //     (!draggedOverItem || draggedOverItem.code !== newDraggedOverItem.code)
+      //   ) {
+      //     updateItemState(newDraggedOverItem, { bgColor: 'red' });
+      //     if (draggedOverItem) {
+      //       updateItemState(draggedOverItem, { bgColor: undefined });
+      //     }
+      //     draggedOverItem = newDraggedOverItem;
+      //     //this.swapTags(this.tagBeingDragged, draggedOverTag);
+      //   }
+      // },
       // onPanResponderMove: Animated.event([null, { dy: pan.y }], {
       //   useNativeDriver: false,
       //   listener: (evt) => {
@@ -130,9 +157,9 @@ const DraggableArea = ({ _data }) => {
       //   onPanResponderMove: (evt, gestureState) => {
       //     Animated.event([{ y: pan.y }])({ y: gestureState.moveY });
       //   },
-      //   onPanResponderRelease: () => {
-      //     pan.flattenOffset();
-      //   },
+      onPanResponderRelease: () => {
+        pan.flattenOffset();
+      },
     }),
   ).current;
   // Enable dnd back after the animation is over
@@ -199,6 +226,20 @@ const DraggableArea = ({ _data }) => {
         </View>
         /*<DraggableView key={i} backgroundColor={i % 2 === 0 ? '#61dafb' : 'green'} />*/
       ))}
+      {/*itemBeingDragged && (
+        <Animated.View
+          style={[
+            {
+              position: 'absolute',
+              top: pan.y,
+            },
+            styles.box,
+            { backgroundColor: 'gray' },
+          ]}
+        >
+          <Text>{itemBeingDragged.name}</Text>
+        </Animated.View>
+        )*/}
     </View>
   );
 };
@@ -226,8 +267,8 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 4,
-    padding: 10,
-    margin: 10,
+    //padding: 10,
+    //margin: 10,
     /*position: 'absolute',*/
   },
   fixed: {

@@ -11,6 +11,7 @@ import AddProduct from '../screens/AddProduct';
 import Products from '../screens/Products';
 import OpenTurn from '../screens/OpenTurn';
 import IPV from '../screens/Ipv';
+import Draggable from '../screens/Dragger';
 const Stack = createStackNavigator();
 const salesHeaderStyles = (theme) => ({
   //title: 'My home',
@@ -63,6 +64,7 @@ function StackNav() {
         component={OpenTurn}
       />
       <Stack.Screen name="Ipv" component={IPV} />
+      <Stack.Screen name="Draggable" component={Draggable} />
     </Stack.Navigator>
   );
 }

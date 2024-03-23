@@ -10,6 +10,7 @@ const DrawerList = [
   { icon: 'point-of-sale', type: 'MaterialIcons', label: 'Ventas', navigateTo: 'Tpv' },
   { icon: 'product-hunt', type: 'FontAwesome', label: 'Productos', navigateTo: 'Products' },
   { icon: 'product-hunt', type: 'FontAwesome', label: 'IPV', navigateTo: 'Ipv' },
+  { icon: 'product-hunt', type: 'FontAwesome', label: 'Draggable', navigateTo: 'Draggable' },
 ];
 const getIcon = ({ icon, type, color, size }) => {
   switch (type) {

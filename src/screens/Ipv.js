@@ -38,13 +38,18 @@ const RenderRow = ({ product, index }) => {
     </View>
   );
 };
-const IPV = async () => {
+const IPV = () => {
   const { products } = useProduct();
   //const [productsSorted, setProductsSorted] = React.useState([]);
   const [ipv, setIPV] = React.useState([]);
+  const [existTurn, setExistTurn] = React.useState(true);
   //console.log('AASASASAS ' + (await POS.turn.getIPV()));
   const fillIPV = React.useCallback(async () => {
     const productSorted = products.sort((a, b) => a.order - b.order);
+    if (!(await POS.turn.get())) {
+      setExistTurn(false);
+      return;
+    }
     let _ipv = await POS.turn.getIPV();
     if (!_ipv) {
       _ipv = productSorted.map((p) => ({
@@ -89,55 +94,72 @@ const IPV = async () => {
 
   const productNames = products.map((p) => p.name);
 
+  if (!existTurn) {
+    return (
+      <View>
+        <Text>Tiene que abrir el turno.</Text>
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
-      <View style={styles.leftColumn}>
-        <View style={[styles.headerItem, { width: 130 }]}>
-          <Text style={styles.headerItemText}>Producto</Text>
+      <View style={{ flexDirection: 'row' }}>
+        <View style={styles.leftColumn}>
+          <View style={[styles.headerItem, { width: 130 }]}>
+            <Text style={styles.headerItemText}>Producto</Text>
+          </View>
+          {/* left scroll view to simulate fixed first column */}
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            ref={scrollOuterRef}
+            onScroll={handleOuterScrollView}
+            scrollEventThrottle={8}
+            onScrollBeginDrag={() => onScrollBeginDrag('outer')}
+            onScrollEndDrag={onScrollEndDrag}
+          >
+            {productNames.map((name, index) => (
+              <View key={index} style={{ backgroundColor: index % 2 == 0 ? '#f9f9f9' : undefined }}>
+                <Text style={[styles.textLeftCell]}>{name}</Text>
+              </View>
+            ))}
+          </ScrollView>
         </View>
-        {/* left scroll view to simulate fixed first column */}
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          ref={scrollOuterRef}
-          onScroll={handleOuterScrollView}
-          scrollEventThrottle={8}
-          onScrollBeginDrag={() => onScrollBeginDrag('outer')}
-          onScrollEndDrag={onScrollEndDrag}
-        >
-          {productNames.map((name, index) => (
-            <View key={index} style={{ backgroundColor: index % 2 == 0 ? '#f9f9f9' : undefined }}>
-              <Text style={[styles.textLeftCell]}>{name}</Text>
-            </View>
-          ))}
-        </ScrollView>
-      </View>
-      <View style={styles.grid}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {/* inner grid  */}
-          <View>
-            <View style={{ flexDirection: 'row' }}>
-              {columns.map((col, i) => (
-                <View style={styles.headerItem} key={i}>
-                  <Text style={styles.headerItemText}>{col.label}</Text>
-                </View>
-              ))}
-            </View>
-            <ScrollView
-              showsHorizontalScrollIndicator={false}
-              ref={scrollInnerRef}
-              onScroll={handleInnerScrollView}
-              scrollEventThrottle={8}
-              onScrollBeginDrag={() => onScrollBeginDrag('inner')}
-              onScrollEndDrag={onScrollEndDrag}
-            >
-              <View>
-                {ipv.map((p, index) => (
-                  <RenderRow product={p} key={index} index={index} />
+        <View style={styles.grid}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {/* inner grid  */}
+            <View>
+              <View style={{ flexDirection: 'row' }}>
+                {columns.map((col, i) => (
+                  <View style={styles.headerItem} key={i}>
+                    <Text style={styles.headerItemText}>{col.label}</Text>
+                  </View>
                 ))}
               </View>
-            </ScrollView>
-          </View>
-        </ScrollView>
+              <ScrollView
+                showsHorizontalScrollIndicator={false}
+                ref={scrollInnerRef}
+                onScroll={handleInnerScrollView}
+                scrollEventThrottle={8}
+                onScrollBeginDrag={() => onScrollBeginDrag('inner')}
+                onScrollEndDrag={onScrollEndDrag}
+              >
+                <View>
+                  {ipv.map((p, index) => (
+                    <RenderRow product={p} key={index} index={index} />
+                  ))}
+                </View>
+              </ScrollView>
+            </View>
+          </ScrollView>
+        </View>
+      </View>
+      <View>
+        <ThemedButton
+          //onPress={openTurn}
+          style={{ alignSelf: 'center' }}
+          bg="secondaryColor"
+          title="Continuar"
+        />
       </View>
     </View>
   );
@@ -145,7 +167,9 @@ const IPV = async () => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'space-between',
+    paddingBottom: 20,
   },
   leftColumn: {
     width: 130,

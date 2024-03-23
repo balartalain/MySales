@@ -32,13 +32,6 @@ const OpenTurn = ({ navigation }) => {
           placeholder="Fondo de caja"
           onChangeText={handleInputChange}
         />
-        <TText h3 title="Aún no ha contado los productos en existencia" />
-        <ThemedButton
-          style={style.ipvBtn}
-          textStyle={{ color: '#000' }}
-          title="Crear IPV"
-          onPress={createIpv}
-        />
       </View>
       <View>
         <ThemedButton

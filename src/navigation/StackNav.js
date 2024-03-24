@@ -64,7 +64,7 @@ function StackNav() {
         component={OpenTurn}
       />
       <Stack.Screen name="Ipv" component={IPV} />
-      <Stack.Screen name="Draggable" component={Draggable} />
+      <Stack.Screen name="Draggable" component={Draggable} options={{ headerShown: true }} />
     </Stack.Navigator>
   );
 }

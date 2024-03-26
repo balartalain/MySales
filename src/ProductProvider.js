@@ -37,7 +37,9 @@ const ProductProvider = ({ children }) => {
     await AsyncStorage.setItem('products', JSON.stringify(updatedProducts));
   };
   return (
-    <ProductContext.Provider value={{ products, addProduct }}>{children}</ProductContext.Provider>
+    <ProductContext.Provider value={{ products, setProducts, addProduct }}>
+      {children}
+    </ProductContext.Provider>
   );
 };
 

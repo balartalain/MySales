@@ -7,6 +7,7 @@ import ProductList from '../components/ProductList';
 import { ThemedButton, TText } from '../components/ThemedComponents';
 import POS from '../DAL/Pos';
 import { useFocus } from '../hooks/useFocus';
+import { SortableList } from './Animations';
 
 const columns = [
   {
@@ -27,23 +28,27 @@ const RenderRow = ({ product, index }) => {
     <View
       style={{
         flexDirection: 'row',
-        backgroundColor: index % 2 == 0 ? '#f9f9f9' : 'undefined',
+        backgroundColor: index % 2 === 0 ? '#f9f9f9' : 'white',
       }}
     >
       {columns.map((col, i) => (
         <View style={styles.containerCell} key={i}>
-          <Text style={styles.textCell}>{product[col.name]}</Text>
+          <Text style={styles.textCell}>{product[col.name] || 0}</Text>
         </View>
       ))}
     </View>
   );
 };
 const IPV = () => {
-  const { products } = useProduct();
+  const productsRef = React.useRef();
+  const { products, setProducts } = useProduct();
   //const [productsSorted, setProductsSorted] = React.useState([]);
   const [ipv, setIPV] = React.useState([]);
   const [existTurn, setExistTurn] = React.useState(true);
-  //console.log('AASASASAS ' + (await POS.turn.getIPV()));
+  const [scrollTo, setScrollTo] = React.useState(0);
+  const scrollInnerRef = React.useRef();
+  const offsetYRef = React.useRef(0);
+  const [startingScroll, setStartingScroll] = React.useState('no-child');
   const fillIPV = React.useCallback(async () => {
     const productSorted = products.sort((a, b) => a.order - b.order);
     if (!(await POS.turn.get())) {
@@ -62,38 +67,41 @@ const IPV = () => {
       }));
     }
     setIPV(_ipv);
+    productsRef.current = products;
   }, [products]);
+  React.useEffect(() => {
+    const dd = Array.from(Array(12), (_, i) => ({ name: i, initialQty: i, order: i }));
+    setProducts(dd);
+  }, [setProducts]);
+
   React.useEffect(() => {
     fillIPV();
   }, [fillIPV]);
 
-  const scrollOuterRef = React.useRef();
-  const scrollInnerRef = React.useRef();
-  let scrollViewInitDrag;
   // Función para sincronizar el desplazamiento
   const handleInnerScrollView = (event) => {
-    if (scrollViewInitDrag === 'inner') {
+    if (startingScroll !== 'child') {
       const offsety = event.nativeEvent.contentOffset.y;
-      // Scroll al mismo offset en el segundo ScrollView
-      scrollOuterRef.current.scrollTo({ y: offsety, animated: false });
+      setScrollTo(offsety);
+      offsetYRef.current = offsety;
     }
   };
-  const handleOuterScrollView = (event) => {
-    if (scrollViewInitDrag !== 'inner') {
-      const offsety = event.nativeEvent.contentOffset.y;
-      //console.log('handleOuterScrollView');
-      scrollInnerRef.current.scrollTo({ y: offsety, animated: false });
-    }
+  const onChildScrollTo = (offsetY) => {
+    setStartingScroll('child');
+    scrollInnerRef.current.scrollTo({ y: offsetY, animated: false });
+    //setScrollTo(offsetY);
+    offsetYRef.current = offsetY;
   };
-  const onScrollBeginDrag = (scrollView) => {
-    scrollViewInitDrag = scrollView;
+  const onScrollBeginDrag = () => {
+    setStartingScroll('no-child');
   };
-  const onScrollEndDrag = () => {
-    scrollViewInitDrag = null;
+  const onSwapItems = (from, to) => {
+    const order = products[to].order;
+    products[to].order = products[from].order;
+    products[from].order = order;
+    setProducts([...products]);
+    console.log(products);
   };
-
-  const productNames = products.map((p) => p.name);
-
   if (!existTurn) {
     return (
       <View>
@@ -101,15 +109,26 @@ const IPV = () => {
       </View>
     );
   }
+
+  const productNames = products.flatMap((e) => e.name);
   return (
     <View style={styles.container}>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: 'row', flex: 1 }}>
         <View style={styles.leftColumn}>
           <View style={[styles.headerItem, { width: 130 }]}>
             <Text style={styles.headerItemText}>Producto</Text>
           </View>
+          <SortableList
+            scrollTo={scrollTo}
+            startingScroll={startingScroll}
+            onScrollTo={onChildScrollTo}
+            data={productNames}
+            onSwapItems={onSwapItems}
+            textStyle={styles.textLeftCell}
+            oddBgColor="#f9f9f9"
+          />
           {/* left scroll view to simulate fixed first column */}
-          <ScrollView
+          {/*<ScrollView
             showsVerticalScrollIndicator={false}
             ref={scrollOuterRef}
             onScroll={handleOuterScrollView}
@@ -123,6 +142,7 @@ const IPV = () => {
               </View>
             ))}
           </ScrollView>
+            */}
         </View>
         <View style={styles.grid}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -140,11 +160,10 @@ const IPV = () => {
                 ref={scrollInnerRef}
                 onScroll={handleInnerScrollView}
                 scrollEventThrottle={8}
-                onScrollBeginDrag={() => onScrollBeginDrag('inner')}
-                onScrollEndDrag={onScrollEndDrag}
+                onScrollBeginDrag={onScrollBeginDrag}
               >
                 <View>
-                  {ipv.map((p, index) => (
+                  {products.map((p, index) => (
                     <RenderRow product={p} key={index} index={index} />
                   ))}
                 </View>
@@ -173,6 +192,8 @@ const styles = StyleSheet.create({
   },
   leftColumn: {
     width: 130,
+    //height: '100%',
+    //backgroundColor: 'green',
   },
   headerItem: {
     width: 120,

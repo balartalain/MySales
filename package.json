@@ -42,6 +42,7 @@
     "@react-native/typescript-config": "0.73.1",
     "@types/react": "^18.2.6",
     "@types/react-test-renderer": "^18.0.0",
+    "@welldone-software/why-did-you-render": "^8.0.1",
     "babel-jest": "^29.6.3",
     "eslint": "^8.57.0",
     "eslint-config-google": "^0.14.0",

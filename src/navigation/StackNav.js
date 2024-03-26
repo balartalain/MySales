@@ -11,7 +11,8 @@ import AddProduct from '../screens/AddProduct';
 import Products from '../screens/Products';
 import OpenTurn from '../screens/OpenTurn';
 import IPV from '../screens/Ipv';
-import Draggable from '../screens/Dragger';
+import SortableList from '../screens/SortableList';
+import Animations from '../screens/Animations';
 const Stack = createStackNavigator();
 const salesHeaderStyles = (theme) => ({
   //title: 'My home',
@@ -64,7 +65,8 @@ function StackNav() {
         component={OpenTurn}
       />
       <Stack.Screen name="Ipv" component={IPV} />
-      <Stack.Screen name="Draggable" component={Draggable} options={{ headerShown: true }} />
+      <Stack.Screen name="Draggable" component={SortableList} options={{ headerShown: true }} />
+      <Stack.Screen name="Animations" component={Animations} options={{ headerShown: true }} />
     </Stack.Navigator>
   );
 }

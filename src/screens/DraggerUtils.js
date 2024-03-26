@@ -19,22 +19,33 @@ export const moveArrayElement = (
   array, // array of objects
   from, // element to move index
   to, // index where to move
-  mergeProps = {}, // merge additional props into the object
 ) => {
-  if (to > array.length) {
-    return array;
-  }
+  [array[from], array[to]] = [array[to], array[from]];
+  return [...array];
+};
+// export const moveArrayElement = (
+//   array, // array of objects
+//   from, // element to move index
+//   to, // index where to move
+//   mergeProps = {}, // merge additional props into the object
+// ) => {
+//   if (to > array.length) {
+//     return array;
+//   }
 
-  // Remove the element we need to move
-  const arr = [...array.slice(0, from), ...array.slice(from + 1)];
+//   // Remove the element we need to move
+//   const arr = [...array.slice(0, from), ...array.slice(from + 1)];
 
-  // And add it back at a new position
-  return [
-    ...arr.slice(0, to),
-    {
-      ...array[from],
-      ...mergeProps, // merge passed props if any or nothing (empty object) by default
-    },
-    ...arr.slice(to),
-  ];
+//   // And add it back at a new position
+//   return [
+//     ...arr.slice(0, to),
+//     {
+//       ...array[from],
+//       ...mergeProps, // merge passed props if any or nothing (empty object) by default
+//     },
+//     ...arr.slice(to),
+//   ];
+// };
+export const itemIsNearToTop = (item, windowHeight) => {
+  return item.brY > windowHeight - 20;
 };

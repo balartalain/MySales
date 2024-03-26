@@ -10,10 +10,12 @@ import {
   UIManager,
   TouchableOpacity,
   Pressable,
+  ScrollView,
 } from 'react-native';
 import { isPointWithinArea, moveArrayElement } from './DraggerUtils';
-import { ScrollView } from 'react-native-gesture-handler';
-
+import { Dimensions } from 'react-native';
+import { scrollTo } from 'react-native-reanimated';
+const windowHeight = Dimensions.get('window').height;
 // if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
 //   UIManager.setLayoutAnimationEnabledExperimental(true);
 // }
@@ -31,13 +33,11 @@ import { ScrollView } from 'react-native-gesture-handler';
 //     </View>
 //   );
 // };
-const ITEM_SORT_ACTIVE = 1.06;
-const SCALE_DURATION = 200;
-
 let itemBeingDragged;
 let lastDraggedOverItem;
 let currentDraggedOverItem;
 let scrollY = 0;
+let offsetScrollY = 0;
 const DraggableArea = ({ _data }) => {
   const pan = useRef(new Animated.ValueXY()).current;
   const itemRefs = useRef([]);
@@ -46,8 +46,7 @@ const DraggableArea = ({ _data }) => {
   const [allowDragging, setAllowDragging] = useState(false);
   const allowDraggingRef = useRef();
   allowDraggingRef.current = allowDragging;
-  const [dndEnabled, setDndEnabled] = useState();
-  const scaleValue = React.useRef(new Animated.Value(1)).current;
+  const scrollRef = React.useRef();
   //const [bgColors, setBgColors] = useState([]);
 
   React.useEffect(() => {
@@ -61,14 +60,11 @@ const DraggableArea = ({ _data }) => {
   //   React.useEffect(() => {
   //     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
   //   }, []);
-  const onScroll = (event) => {
-    scrollY = event.nativeEvent.contentOffset.y;
-  };
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: (e, gestureState) => {
         const { dx, dy, moveX, moveY, numberActiveTouches } = gestureState;
-        console.log(allowDraggingRef.current);
+
         if (!allowDraggingRef.current) {
           return false;
         }
@@ -99,34 +95,24 @@ const DraggableArea = ({ _data }) => {
           pan.setOffset({
             y: offsetY,
           });
-          updateItemState(itemBeingDragged, { isBeingDragged: true });
-          //console.log(pan);
+          pan.setValue({ x: 0, y: 0 });
         }
       },
       onPanResponderEnd: () => {
         if (itemBeingDragged) {
-          updateItemState(
-            itemBeingDragged,
-            { isBeingDragged: false },
-            { backgroundColor: 'gray', transform: [{ scale: 1 }], zIndex: 1, elevation: 0 },
-          );
+          updateItemState(itemBeingDragged, { isBeingDragged: false, cls: 'lastItemOver' });
           //setItemDragging(undefined);
         }
         if (lastDraggedOverItem) {
-          updateItemState(
-            lastDraggedOverItem,
-            { isBeingDragged: false },
-            { backgroundColor: 'gray' },
-          );
+          updateItemState(lastDraggedOverItem, { isBeingDragged: false, cls: 'lastItemOver' });
         }
         if (currentDraggedOverItem) {
-          updateItemState(
-            currentDraggedOverItem,
-            { isBeingDragged: false },
-            { backgroundColor: 'gray' },
-          );
+          updateItemState(currentDraggedOverItem, { isBeingDragged: false, cls: 'lastItemOver' });
         }
-        itemBeingDragged = lastDraggedOverItem = lastDraggedOverItem = undefined;
+        if (itemBeingDragged != null && currentDraggedOverItem != null) {
+          swapItems(itemBeingDragged, currentDraggedOverItem);
+        }
+        itemBeingDragged = lastDraggedOverItem = lastDraggedOverItem = null;
         setAllowDragging((e) => false);
       },
       onPanResponderMove: Animated.event([null, { dy: pan.y }], {
@@ -134,7 +120,9 @@ const DraggableArea = ({ _data }) => {
         listener: (evt) => {
           const { pageX, pageY } = evt.nativeEvent;
           if (itemBeingDragged) {
-            updateItemState(itemBeingDragged, {}, { transform: [{ translateY: pan.y }] });
+            updateItemState(itemBeingDragged, {
+              transform: [{ scale: 1.1 }, { translateY: pan.y }],
+            });
           }
           let neededUpdate = false;
           currentDraggedOverItem = findItemAtCoordinates(pageX, pageY, itemBeingDragged);
@@ -146,22 +134,12 @@ const DraggableArea = ({ _data }) => {
           }
           if (neededUpdate) {
             if (currentDraggedOverItem) {
-              updateItemState(
-                currentDraggedOverItem,
-                { isBeingDragged: false },
-                {
-                  backgroundColor: 'red',
-                },
-              );
+              updateItemState(currentDraggedOverItem, {
+                cls: 'currItemOver',
+              });
             }
             if (lastDraggedOverItem) {
-              updateItemState(
-                lastDraggedOverItem,
-                {},
-                {
-                  backgroundColor: 'gray',
-                },
-              );
+              updateItemState(lastDraggedOverItem, { cls: 'lastItemOver' });
             }
           }
           lastDraggedOverItem = currentDraggedOverItem;
@@ -172,22 +150,31 @@ const DraggableArea = ({ _data }) => {
       },
     }),
   ).current;
-  // Enable dnd back after the animation is over
-  const enableDndAfterAnimating = () => {
-    //setTimeout(enableDnd, animationDuration);
-  };
-  const enableDnd = () => {
-    setDndEnabled(true);
+
+  const onScroll = (event) => {
+    scrollY = event.nativeEvent.contentOffset.y;
+    setData(
+      data.map((item) => {
+        return {
+          ...item,
+          tlY: item.tlY - scrollY + offsetScrollY,
+          brY: item.tlY - scrollY + offsetScrollY + item.height,
+        };
+      }),
+    );
+    offsetScrollY = scrollY;
   };
   const onLayout = ({ nativeEvent, i }) => {
     setTimeout(() => {
-      data[i].relativeX = nativeEvent.layout.x;
-      data[i].relativeY = nativeEvent.layout.y;
+      //data[i].relativeX = nativeEvent.layout.x;
+      //data[i].relativeY = nativeEvent.layout.y;
       itemRefs.current[i].measure((x, y, width, height, screenX, screenY) => {
         data[i].tlX = screenX;
         data[i].tlY = screenY;
         data[i].brX = screenX + width;
         data[i].brY = screenY + height;
+        data[i].width = width;
+        data[i].height = height;
         data[i].dndEnabled = true;
       });
     }, 300);
@@ -199,53 +186,81 @@ const DraggableArea = ({ _data }) => {
         item.tlY &&
         item.brX &&
         item.brY &&
-        isPointWithinArea(x, y + scrollY, item.tlX, item.tlY, item.brX, item.brY) &&
+        isPointWithinArea(x, y, item.tlX, item.tlY, item.brX, item.brY) &&
         (!exceptItem || exceptItem.code !== item.code),
     );
-    // console.log(`mouseX: ${x} - mouseY: ${y}`);
-    // console.log(`tlX: ${data[0].tlX} - tlY: ${data[0].tlY}`);
+    //console.log(`mouseX: ${x} - mouseY: ${y}`);
+    //console.log(data[0].tlY, data[0].brY);
+    // console.log(
+    //   `tlX: ${dataRef.current[0].tlX} - tlY: ${dataRef.current[0].tlY} - ${dataRef.current[0].brY}`,
+    // );
     return it;
   };
-  const updateItemState = (item, { isBeingDragged }, styles) => {
+  const updateItemState = (item, props) => {
     console.log('Update item');
     const index = dataRef.current.findIndex(({ code }) => code === item.code);
     setData((d) => [
       ...d.slice(0, index),
       {
         ...d[index],
-        isBeingDragged,
-        styles: { ...d[index].styles, ...styles },
+        ...props,
       },
       ...d.slice(index + 1),
     ]);
   };
-  const swapTags = (draggedItem, anotherItem) => {
-    const draggedItemIndex = data.findIndex(({ code }) => code === draggedItem.code);
-    const anotherItemIndex = data.findIndex(({ code }) => code === anotherItem.code);
-    setData(moveArrayElement(data, draggedItemIndex, anotherItemIndex));
-    setDndEnabled(false);
-    enableDndAfterAnimating();
+  const swapItems = (draggedItem, anotherItem) => {
+    const draggedItemIndex = dataRef.current.findIndex(({ code }) => code === draggedItem.code);
+    const anotherItemIndex = dataRef.current.findIndex(({ code }) => code === anotherItem.code);
+    setData((d) => {
+      const dd = moveArrayElement(d, draggedItemIndex, anotherItemIndex);
+      const attrs = {
+        tlX: dd[draggedItemIndex].tlX,
+        tlY: dd[draggedItemIndex].tlY,
+        width: dd[draggedItemIndex].width,
+        height: dd[draggedItemIndex].height,
+      };
+      dd[draggedItemIndex].tlX = dd[anotherItemIndex].tlX;
+      dd[draggedItemIndex].tlY = dd[anotherItemIndex].tlY;
+      dd[draggedItemIndex].brX = dd[anotherItemIndex].tlX + dd[anotherItemIndex].width;
+      dd[draggedItemIndex].brY = dd[anotherItemIndex].tlY + dd[anotherItemIndex].height;
+
+      dd[anotherItemIndex].tlX = attrs.tlX;
+      dd[anotherItemIndex].tlY = attrs.tlY;
+      dd[anotherItemIndex].brX = attrs.tlX + attrs.width;
+      dd[anotherItemIndex].brY = attrs.tlY + attrs.height;
+      return dd;
+    });
+    // setDndEnabled(false);
+    // enableDndAfterAnimating();
   };
   const onLongPress = (e) => {
     const { pageX, pageY } = e.nativeEvent;
     const item = findItemAtCoordinates(pageX, pageY);
     if (item) {
-      updateItemState(
-        item,
-        { isBeingDragged: true },
-        { backgroundColor: 'yellow', transform: [{ scale: 0.9 }], zIndex: 2, elevation: 9 },
-      );
+      updateItemState(item, {
+        isBeingDragged: true,
+        transform: [{ scale: 1.1 }, { translateY: 0 }],
+        cls: 'itemDragged',
+      });
     }
     setAllowDragging(true);
   };
-  const onPressOut = () => {
+  const onPressOut = (e) => {
+    const { pageX, pageY } = e.nativeEvent;
     if (!itemBeingDragged) {
+      const item = findItemAtCoordinates(pageX, pageY);
+      if (allowDragging && item) {
+        updateItemState(item, {
+          isBeingDragged: false,
+          cls: 'lastItemOver',
+        });
+      }
       setAllowDragging(false);
     }
   };
   return (
-    <ScrollView scrollEnabled={!allowDragging} onScroll={onScroll}>
-      <View {...panResponder.panHandlers}>
+    <View {...panResponder.panHandlers}>
+      <ScrollView ref={scrollRef} scrollEnabled={!allowDragging} onScroll={onScroll}>
         {data.map((item, i) => (
           <TouchableOpacity
             key={i}
@@ -253,46 +268,34 @@ const DraggableArea = ({ _data }) => {
             onPressOut={onPressOut}
             ref={(element) => itemRefs.current.push(element)}
             onLayout={({ nativeEvent }) => onLayout({ nativeEvent, i })}
-            style={[styles.box, item.styles]}
+            style={[
+              { transform: item.transform ? item.transform : [{ scale: 1 }, { translateY: 0 }] },
+              styles.box,
+              styles[item.cls],
+            ]}
           >
             <Animated.View>
               <Text>{item.name}</Text>
-              <Text>{item.isBeingDragged ? 'TRUE' : 'FALSE'}</Text>
+              <Text style={{ fontSize: 18 }}>tlY: {parseInt(item.tlY)}</Text>
+              <Text style={{ fontSize: 18 }}>brY: {parseInt(item.brY)}</Text>
             </Animated.View>
           </TouchableOpacity>
           /*<DraggableView key={i} backgroundColor={i % 2 === 0 ? '#61dafb' : 'green'} />*/
         ))}
-        {/*itemBeingDragged && (
-          <Animated.View
-            style={[
-              {
-                position: 'absolute',
-                top: pan.y,
-              },
-              styles.box,
-              { backgroundColor: 'gray', elevation: 9 },
-            ]}
-          >
-            <Text>{itemBeingDragged.name}</Text>
-          </Animated.View>
-          )*/}
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 };
 const data = [
   { code: '0001', name: 'Refresco', price: 120 },
   { code: '0002', name: 'Cerveza', price: 120 },
-  { code: '0003', name: 'Malta', price: 120 },
-  { code: '0004', name: 'Cola', price: 120 },
-  { code: '50er001', name: 'Refresco', price: 120 },
-  { code: '06557er002', name: 'Cerveza', price: 120 },
-  { code: '0e78567r003', name: 'Malta', price: 120 },
-  { code: '06e67r004', name: 'Cola', price: 120 },
-  { code: '065745001', name: 'Refresco', price: 120 },
-  { code: '0677wer002', name: 'Cerveza', price: 120 },
-  { code: '089056303', name: 'Malta', price: 120 },
-  { code: '003404', name: 'Cola', price: 120 },
+  { code: '00df02', name: 'Malta', price: 120 },
+  { code: '00e0df1', name: 'Refresco', price: 120 },
+  { code: '0dfdf002', name: 'Cerveza', price: 120 },
+  { code: '00de40df1', name: 'Refresco', price: 120 },
+  { code: '00sdf02', name: 'Cerveza', price: 120 },
+  { code: '0sd001', name: 'Refresco', price: 120 },
+  { code: '00sda02', name: 'Cerveza', price: 120 },
 ];
 const Draggable = () => {
   return (
@@ -308,21 +311,43 @@ const styles = StyleSheet.create({
     //alignItems: 'center',
   },
   box: {
-    width: 80,
-    height: 80,
+    width: 200,
+    height: 100,
     //borderRadius: 4,
     padding: 10,
     margin: 10,
     backgroundColor: 'gray',
     /*position: 'absolute',*/
   },
-  cloneBox: {
+  itemDragged: {
     shadowColor: 'black',
     shadowOpacity: 0.26,
     shadowOffset: { width: 0, height: 4 },
     shadowRadius: 10,
-    elevation: 5,
-    transform: [{ scale: 1.1 }],
+    backgroundColor: 'yellow',
+    //transform: [{ scale: 0.9 }],
+    zIndex: 2,
+    elevation: 9,
+  },
+  currItemOver: {
+    shadowColor: 'black',
+    shadowOpacity: 0.26,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 10,
+    backgroundColor: 'red',
+    transform: [{ scale: 1.15 }, { translateY: 0 }],
+    zIndex: 1,
+    elevation: 0,
+  },
+  lastItemOver: {
+    shadowColor: 'black',
+    shadowOpacity: 0.26,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 10,
+    backgroundColor: 'gray',
+    transform: [{ scale: 1 }, { translateY: 0 }],
+    zIndex: 1,
+    elevation: 0,
   },
 });
 export default Draggable;

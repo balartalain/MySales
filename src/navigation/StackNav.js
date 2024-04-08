@@ -11,8 +11,8 @@ import AddProduct from '../screens/AddProduct';
 import Products from '../screens/Products';
 import OpenTurn from '../screens/OpenTurn';
 import IPV from '../screens/Ipv';
-import SortableList from '../screens/SortableList';
-import Animations from '../screens/Animations';
+import SortableList from '../components/SortableList';
+import Animations from '../components/SortableList';
 const Stack = createStackNavigator();
 const salesHeaderStyles = (theme) => ({
   //title: 'My home',

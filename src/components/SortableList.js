@@ -1,4 +1,4 @@
-import React, { PureComponent, useEffect, useRef, useState } from 'react';
+import React, { PureComponent, startTransition, useEffect, useRef, useState } from 'react';
 import {
   Animated,
   PanResponder,
@@ -62,21 +62,20 @@ class SortableList extends PureComponent {
     this.toggleStartingScroll = this.toggleStartingScroll.bind(this);
     this.showChanges = this.showChanges.bind(this);
     this.swapItems = this.swapItems.bind(this);
-    const draggedPositionObject = {};
+    this._draggedPositionObject = {};
     this.itemsRefs = {};
     this.scrollViewRef = React.createRef(null);
     this.offsetY = 0;
     this.state = {
       startingScroll: this.props.startingScroll,
-      draggedPositionObject,
-      items: this.props.data.map((label, id) => ({ id, label })),
+      items: [],
+      draggedPositionObject: this._draggedPositionObject,
+      //items: this.props.data.map((label, id) => ({ id, label })),
       itemBeingDragged: undefined,
       itemOverDragged: undefined,
       lastOverDragged: undefined,
     };
-    this.state.items.forEach((element) => {
-      draggedPositionObject[element.id] = new Animated.Value(0);
-    });
+
     this.panResponder = PanResponder.create({
       onMoveShouldSetPanResponderCapture: (_, gestureState) => {
         return this.onShouldSetResponder(_, gestureState);
@@ -195,7 +194,33 @@ class SortableList extends PureComponent {
       }
     });
   }
+
   componentDidUpdate(prevProps, prevState) {
+    if (prevProps.data.length === 0 && this.props.data.length > 0) {
+      const data = this.props.data.map((label, id) => ({ id, label }));
+      this.setState({ items: data });
+      data.forEach((element) => {
+        if (!this._draggedPositionObject[element.id]) {
+          this._draggedPositionObject[element.id] = new Animated.Value(0);
+        }
+      });
+    }
+    // if (prevProps.data !== this.props.data) {
+    //   const data = this.props.data;
+    //   this.setState((state) => ({
+    //     ...state,
+    //     items: data.map((label, id) => ({ id, label })),
+    //   }));
+    //   console.log(this.state.items);
+    //   this.state.items.forEach((element) => {
+    //     this.setState((state) => {
+    //       state.draggedPositionObject[element.id] = new Animated.Value(0);
+    //     });
+    //   });
+    // }
+    if (prevProps.startingScroll !== this.props.startingScroll) {
+      this.setState({ startingScroll: this.props.startingScroll });
+    }
     if (this.props.startingScroll !== 'child') {
       this.scrollViewRef.current.scrollTo({ y: this.props.scrollTo, animated: true });
     }
@@ -307,6 +332,7 @@ class SortableList extends PureComponent {
     return (
       <View style={styles.container} {...this.panResponder.panHandlers}>
         <ScrollView
+          showsHorizontalScrollIndicator={false}
           ref={this.scrollViewRef}
           //style={{ backgroundColor: 'pink' }}
           scrollEnabled={true}
@@ -342,10 +368,6 @@ class SortableList extends PureComponent {
   }
 }
 SortableList.whyDidYouRender = true;
-const Animations = () => {
-  const data = Array.from(Array(20), (_, i) => i);
-  return <SortableList data={data} />;
-};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -384,5 +406,4 @@ const styles = StyleSheet.create({
     elevation: 0,
   },
 });
-export { SortableList };
-export default Animations;
+export default SortableList;

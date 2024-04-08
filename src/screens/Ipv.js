@@ -7,7 +7,7 @@ import ProductList from '../components/ProductList';
 import { ThemedButton, TText } from '../components/ThemedComponents';
 import POS from '../DAL/Pos';
 import { useFocus } from '../hooks/useFocus';
-import { SortableList } from './Animations';
+import SortableList from '../components/SortableList';
 
 const columns = [
   {
@@ -70,7 +70,7 @@ const IPV = () => {
     productsRef.current = products;
   }, [products]);
   React.useEffect(() => {
-    const dd = Array.from(Array(12), (_, i) => ({ name: i, initialQty: i, order: i }));
+    const dd = Array.from(Array(5), (_, i) => ({ name: i, initialQty: i, order: i }));
     setProducts(dd);
   }, [setProducts]);
 
@@ -80,6 +80,7 @@ const IPV = () => {
 
   // Función para sincronizar el desplazamiento
   const handleInnerScrollView = (event) => {
+    console.log(startingScroll);
     if (startingScroll !== 'child') {
       const offsety = event.nativeEvent.contentOffset.y;
       setScrollTo(offsety);
@@ -100,7 +101,6 @@ const IPV = () => {
     products[to].order = products[from].order;
     products[from].order = order;
     setProducts([...products]);
-    console.log(products);
   };
   if (!existTurn) {
     return (
@@ -128,21 +128,6 @@ const IPV = () => {
             oddBgColor="#f9f9f9"
           />
           {/* left scroll view to simulate fixed first column */}
-          {/*<ScrollView
-            showsVerticalScrollIndicator={false}
-            ref={scrollOuterRef}
-            onScroll={handleOuterScrollView}
-            scrollEventThrottle={8}
-            onScrollBeginDrag={() => onScrollBeginDrag('outer')}
-            onScrollEndDrag={onScrollEndDrag}
-          >
-            {productNames.map((name, index) => (
-              <View key={index} style={{ backgroundColor: index % 2 == 0 ? '#f9f9f9' : undefined }}>
-                <Text style={[styles.textLeftCell]}>{name}</Text>
-              </View>
-            ))}
-          </ScrollView>
-            */}
         </View>
         <View style={styles.grid}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
